@@ -1,0 +1,372 @@
+% MA1512 Cheat Sheet -- condensed, continuous-column edition.
+% Original author: Brians Tjipto. Reflowed and selectively abridged at user request.
+% Compile using pdfLaTeX. Laplace formulas revised; other sections not accuracy-reviewed.
+% External PNG images are optional: place them beside this .tex file.
+% Missing files show placeholders; no hexadecimal image data is embedded.
+% multicols* fills columns sequentially, leaving unused space at the end.
+\documentclass[10pt,a4paper,landscape]{article}
+\usepackage[margin=10mm]{geometry}
+\usepackage{amsmath,amssymb,xcolor,graphicx,multicol,titlesec,needspace}
+\usepackage{hyperref}
+\usepackage{kotex}
+\hypersetup{hidelinks,pdftitle={MA1512 Cheat Sheet},pdfauthor={Brians Tjipto (edited by Seojin)}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+\setlength{\columnsep}{10pt}
+\setlength{\multicolsep}{0pt}
+\titleformat{\section}{\fontsize{11}{12}\selectfont\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{6pt}{3pt}
+\newcommand{\Lapl}{\mathcal{L}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newsavebox{\equationbox}
+\newcommand{\eq}[1]{\par\noindent\sbox{\equationbox}{$\displaystyle #1$}%
+  \makebox[\linewidth][c]{\ifdim\wd\equationbox>\linewidth
+  \resizebox{\linewidth}{!}{\usebox{\equationbox}}\else\usebox{\equationbox}\fi}\par}
+\newcommand{\gap}{\vspace{0.5pt}}
+\newcommand{\eqgap}{\vspace{1pt}}
+
+% Fixed portrait cells keep labels aligned even with differently shaped images.
+% First argument is the exact filename; second argument is the displayed label.
+\newcommand{\portrait}[2]{%
+  \begin{minipage}[t]{0.31\linewidth}\centering
+  \vspace{0pt}%
+  \parbox[c][25mm][c]{\linewidth}{\centering
+    \IfFileExists{#1}{\includegraphics[width=\linewidth,height=25mm,keepaspectratio]{#1}}%
+    {\fbox{\parbox[c][22mm][c]{0.8\linewidth}{\centering\tiny Add image}}}}%
+  \par\vspace{1pt}{\fontsize{7}{8}\selectfont #2}\par
+  \end{minipage}}
+
+\begin{document}
+\fontsize{8}{9.5}\selectfont
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\begin{multicols*}{3}
+\raggedcolumns
+\noindent\begin{minipage}{\linewidth}\centering
+{\fontsize{14.4}{16}\selectfont\bfseries MA1512 Cheat Sheet\par}
+{\fontsize{9}{11}\selectfont\itshape Brians Tjipto (edited by Seojin)}
+\end{minipage}
+\par
+\section*{Separable Equations}
+
+$M(x)dx=N(y)dy$, equilibrium $\Longrightarrow\frac{dy}{dx}=0$
+\par
+
+\section*{Linear Change of Variable}
+
+If $y'=f(ax+by+c)$, set $u=ax+by+c$ and solve.
+\par
+
+\section*{Linear First ODE}
+
+$y'+p(x)y=q(x)$\\
+  $u=e^{\int p(x)\,dx}$\\
+  $u(y'+py)=uq\Longrightarrow(uy)'=uq$
+\par
+
+\par
+
+\section*{Bernoulli's Equation}
+
+If an equation has the form $y'+p(x)y=q(x)y^n$,\\
+  divide by $y^n$ and let $z=y^{1-n}$:
+  \vspace{2pt}
+  \eq{z'+(1-n)p(x)z=(1-n)q(x).}
+\par
+
+\section*{Homogeneous ODE}
+
+\eq{y''+py'+qy=0.}\gap
+  Characteristic equation: $r^2+pr+q=0$.\\[2pt]
+  \textbf{Case 1:} Real distinct roots: $y=c_1e^{r_1x}+c_2e^{r_2x}$.\\
+  \textbf{Case 2:} Distinct Complex roots: If solution is $a\pm ib$, then
+  $y=e^{ax}(c_1\cos(bx)+c_2\sin(bx))$.\\
+  \textbf{Case 3:} Equal real roots: $y=c_1e^{r_1x}+c_2xe^{r_1x}$.
+\par
+
+\section*{Method of Undetermined Coefficients}
+
+The solution to the equation
+  \[y''+py'+qy=R(x)\]
+  is of the form
+  \[y=y_g+y_p\]
+  where $y_g$ is the general solution found by letting $R(x)$ to be 0 and
+  $y_p$ is the particular solution that is to be determined\\
+  \textbf{Case 1:} $R(x)=P(x)e^{kx}$, Substitute $y_p=u(x)e^{kx}$\\
+  \textbf{Case 2:} $R(x)$ is a trigonometric function with angular frequency $b$.
+  Substitute $y_p=u(x)e^{a+ib}$ and take the real or imaginary component of the
+  resultant solution based on whether $R(x)$ has $\sin$ or $\cos$.\\
+  Alternatively, let $y_p=u(x)(A\sin bx+B\cos bx)$\\
+  \textbf{Case 3:} $R(x)$ is a polynomial. Substitute $y_p=A_0+A_1x+\ldots A_nx^n$,
+  $x(A_0+A_1x+\ldots+A_nx^n)$, etc where the degree of the polynomial is the degree of $R(x)$.
+\par
+
+\section*{Method of Variation of Parameters}
+
+\eq{y''+p(x)y'+q(x)y=r(x)}\gap
+  Let $W(y_1,y_2)=y_1y_2'-y_1'y_2$. Then:
+  \vspace{2pt}
+  \eq{u=-\int\frac{y_2r(x)}{W(y_1,y_2)}\,dx,\quad
+       v=\int\frac{y_1r(x)}{W(y_1,y_2)}\,dx.}
+  \vspace{2pt}
+  Solution: $y_p=uy_1+vy_2$.
+\par
+
+\section*{Superposition}
+
+If $y_1$ is the solution to the equation
+  \[y''+p(x)y'+q(x)y=g(x)\]
+  and $y_2$ is the solution to the equation
+  \[y''+p(x)y'+q(x)y=h(x)\]
+  the function $y=C_1y_1+C_2y_2$
+  is a solution to the equation
+  \[y''+p(x)y'+q(x)y=g(x)+h(x)\]
+\par
+
+\section*{Laplace Transforms}
+\eq{F(s)=\Lapl[f(t)]=\int_0^\infty e^{-st}f(t)\,dt,\quad f(t)=\Lapl^{-1}[F(s)]}
+\eq{\Lapl[te^{at}]=\frac1{(s-a)^2}}
+\eq{\Lapl[\cosh(at)]=\frac{s}{s^2-a^2},\quad\Lapl[\sinh(at)]=\frac{a}{s^2-a^2}}
+\eq{\Lapl[t\cos(at)]=\frac{s^2-a^2}{(s^2+a^2)^2},\quad\Lapl[t\sin(at)]=\frac{2as}{(s^2+a^2)^2}}
+\eq{\Lapl[\sin(at+b)]=\frac{s\sin b+a\cos b}{s^2+a^2}}
+\eq{\Lapl[\cos(at+b)]=\frac{s\cos b-a\sin b}{s^2+a^2}}
+\eq{\Lapl[f(ct)]=\frac1c F\left(\frac sc\right),\quad c>0}
+\eq{\Lapl^{-1}\left[\frac{e^{-as}}{s+b}\right]=e^{-b(t-a)}u(t-a),\quad a\geq0}
+
+\textbf{1.} $\Lapl[af(t)+bg(t)]=a\Lapl[f(t)]+b\Lapl[g(t)]$.\par
+\textbf{2.} If $\Lapl[f(t)]=F(s)$, then
+$\Lapl[t f(t)]=-\dfrac{d}{ds}F(s)$.\par
+\textbf{3.} $\Lapl[e^{at}f(t)]=F(s-a)$.\par
+\textbf{4.} $\Lapl[y'(t)]=s\Lapl[y]-y(0)$,
+\eq{\Lapl[y''(t)]=s\Lapl[y']-y'(0)=s^2\Lapl[y]-sy(0)-y'(0)}
+\eq{\Lapl\left[\int_0^t y(\tau)\,d\tau\right]=\frac1s\Lapl[y]}
+\textbf{5. Second shifting theorem} ($c\geq0$):
+\eq{\Lapl[u(t-c)f(t-c)]=e^{-cs}F(s)}
+\eq{\Lapl^{-1}[e^{-cs}F(s)]=u(t-c)f(t-c)}
+\eq{\Lapl[u(t-c)f(t)]=e^{-cs}\Lapl[f(t+c)]}
+\eq{u(t-c)=\begin{cases}0,&t<c,\\1,&t\geq c.\end{cases}}
+\eq{\delta_\varepsilon(t-c)=\begin{cases}
+\dfrac1{\varepsilon},&|t-c|<\varepsilon,\\
+0,&|t-c|\geq\varepsilon,
+\end{cases}\quad\varepsilon>0.}
+\eq{\delta(t-c)=\lim_{\varepsilon\to0^+}\delta_\varepsilon(t-c)}
+\eq{\delta(t-c)=0\ (t\ne c),\quad\int_{-\infty}^{\infty}\delta(t-c)\,dt=1}
+\eq{\int_{-\infty}^{\infty}f(t)\delta(t-c)\,dt=f(c),\quad u'(t-c)=\delta(t-c)}
+\eq{\Lapl[\delta(t)]=1\quad\text{(causal impulse convention)}}
+
+\section*{Malthus Model}
+
+\eq{y'=ky,\quad y(0)=y_0e^{kt},\quad
+       k=\frac{\ln(2)}{\text{half-life}}}
+\par
+\section*{Logistic Model}
+\eq{y'=ky\left(1-\frac{y}{\beta}\right)}
+\eq{\beta=y_\infty:\text{ carrying capacity},
+    \quad k>0:\text{ growth rate}}
+\eq{y(t)=\frac{\beta}
+    {1+\left(\frac{\beta}{y_0}-1\right)e^{-kt}},
+    \quad y(0)=y_0>0}
+\eq{y(t)\to\beta\quad\text{as }t\to\infty}
+Equilibria: $y=0$ (unstable), $y=\beta$ (stable),
+assuming $\beta>0$.
+\par
+
+\section*{Harvesting Model}
+
+\eq{\frac{d}{dt}=k(1 -\frac{y}{y_{\infty}})y-E,\quad
+       \frac{dy}{dt}=-\frac{k}{y_\infty}y^2+ky-E}
+\par
+
+The quadratic curve has no solution when $E>\frac{ky_{\infty}}{4}$. This means the
+  derivative will always be negative and population would dwindle to zero.\\
+  The quadratic curve has one solution when $E=\frac{4kE}{y_{\infty}}$. This means\\
+  there is one semistable equilibrium at $\beta=\frac{y_{\infty}}{2}$.\\
+  When $E<k\frac{ky_{\infty}}{4}$ there is a stable and unstable equilibrium at two
+  roots of the equation when the derivative is zero.
+\eq{\beta=\frac{-k\mp\sqrt{k^2-4kE/y_\infty}}{\frac{2k}{y_\infty}}}
+\par
+
+\section*{Heat Equations}
+
+\eq{u_t=c^2u_{xx},\quad u(L,t)=0,\quad u(0,t)=0}
+  \eq{u_n(x,t)=e^{(-c^2\pi^2n^2t)/l^2}(\beta_n\sin\frac{\pi n}{l}x)}
+  \gap Boundary is from 0 to $l$, to determine $n$, $\beta_n$: use $u(x,0)=f(x)$
+\par
+
+\section*{Separation of variables}
+\gap Given a homogenous linear PDE, suppose solution exists in the form $u=X(x)Y(x)$.
+\gap replace all expressions in the PDE:
+\eq{u=XY, \quad u_x=X'Y, \quad u_y = XY'}
+\par
+
+\section*{Simple Harmonic Motion}
+
+\eq{k=\frac{mg}{\Delta l},\quad \omega_0=\sqrt{\frac{k}{m}}, \quad x''+\omega_0^2x=0,\quad
+    x(t)=R\cos(\omega_0t-\phi)}
+
+\textbf{Driven oscillators (undamped)}
+\eq{mx''+kx=F_0\cos(\omega t)}
+\eq{x(t)=R\cos(\omega_0t-\phi)
+    +\frac{F_0}{m(\omega_0^2-\omega^2)}\cos(\omega t)}
+
+\textbf{Resonance:} driving equals natural frequency,
+$\omega=\omega_0$.
+\eq{x(t)=R\cos(\omega_0t-\phi)
+    +\frac{F_0}{2m\omega_0}\,t\sin(\omega_0t)}
+\par
+\vspace{2em}
+
+\textbf{Damped motion} ($\gamma>0$, $\omega_0>0$):
+\eq{x''+2\gamma x'+\omega_0^2x=0}
+\eq{\lambda_{1,2}=-\gamma\pm\sqrt{\gamma^2-\omega_0^2}}
+
+\textbf{Overdamped (Green): exp decay to eq.} $\omega_0^2<\gamma^2; \quad x(t)=c_1e^{\lambda_1t}+c_2e^{\lambda_2t}$
+\par
+
+\textbf{Critically damped (Red): fastest non-osc return } $\omega_0^2=\gamma^2$;.
+\eq{x(t)=(c_1+c_2t)e^{-\gamma t}}\par
+
+\textbf{Underdamped (Blue): Damped harmonic} $\omega_0^2>\gamma^2$;
+\eq{\alpha=-\gamma,\qquad \beta=\sqrt{\omega_0^2-\gamma^2}}
+\eq{x(t)=e^{\alpha t}
+    \left(c_1\cos(\beta t)+c_2\sin(\beta t)\right)}
+
+% Add damping.png beside this .tex file.
+\noindent\begin{minipage}{\linewidth}\centering
+\IfFileExists{damping.png}{%
+  \includegraphics[
+    width=\linewidth,height=45mm,keepaspectratio
+  ]{damping.png}}{%
+  \fbox{\parbox[c][29mm][c]{0.94\linewidth}{%
+    \centering\texttt{damping.png}}}}
+\end{minipage}\par
+
+\section*{Trigonometric Identities}
+  \eq{\sin\left(\frac\pi2-x\right)=\cos x,\quad\cos\left(\frac\pi2-x\right)=\sin x}\gap
+  \eq{\tan\left(\frac\pi2-x\right)=\cot x,\quad\cot\left(\frac\pi2-x\right)=\tan x}\gap
+  \eq{\sec\left(\frac\pi2-x\right)=\csc x,\quad\csc\left(\frac\pi2-x\right)=\sec x}\gap
+  \eq{\tan(x\pm y)=\frac{\tan x\pm\tan y}{1\mp\tan x\tan y},\quad
+       \cos^2x+\sin^2x=1\ (\text{any }x)}\gap
+  \eq{\cos(2x)=\cos^2x-\sin^2x=2\cos^2x-1=1-2\sin^2x}\gap
+  \eq{\sin(2x)=2\sin x\cos x,\quad\tan(2x)=\frac{2\tan x}{1-\tan^2x}}\gap
+  \eq{\sin\left(\frac x2\right)=\pm\sqrt{\frac{1-\cos x}{2}},\quad
+       \cos\left(\frac x2\right)=\pm\sqrt{\frac{1+\cos x}{2}}}
+\par
+
+\eq{\tan\left(\frac x2\right)=\frac{\sin x}{1+\cos x}=\frac{1-\cos x}{\sin x}}\gap
+  \eq{\sin^2x=\frac{1-\cos(2x)}2,\quad\cos^2x=\frac{1+\cos(2x)}2}\gap
+  \eq{\tan^2x=\frac{1-\cos(2x)}{1+\cos(2x)}}\gap
+  \eq{\sin x\sin y=\frac12[\cos(x-y)-\cos(x+y)]}\gap
+  \eq{\cos x\cos y=\frac12[\cos(x-y)+\cos(x+y)]}\gap
+  \eq{\sin x\cos y=\frac12[\sin(x+y)+\sin(x-y)]}\gap
+  \eq{\tan x\tan y=\frac{\tan x+\tan y}{\cot x+\cot y},\quad
+       \tan x\cot y=\frac{\tan x+\cot y}{\cot x+\tan y}}\gap
+  \eq{\sin x+\sin y=2\sin\left(\frac{x+y}2\right)\cos\left(\frac{x-y}2\right)}\gap
+  \eq{\sin x-\sin y=2\cos\left(\frac{x+y}2\right)\sin\left(\frac{x-y}2\right)}\gap
+  \eq{\cos x+\cos y=2\cos\left(\frac{x+y}2\right)\cos\left(\frac{x-y}2\right)}\gap
+  \eq{\cos x-\cos y=-2\sin\left(\frac{x+y}2\right)\sin\left(\frac{x-y}2\right)}\gap
+  \eq{\tan x\pm\tan y=\frac{\sin(x\pm y)}{\cos x\cos y}}\gap
+  \eq{a\cos\theta\pm b\sin\theta=R\cos(\theta\mp\alpha)}\gap
+  \eq{a\sin\theta\pm b\cos\theta=R\sin(\theta\pm\alpha)}\gap
+  \eq{\alpha=\arctan\left(\frac ba\right),\quad R=\sqrt{a^2+b^2}}
+\par
+
+\section*{Hyperbolic Functions}
+
+\eq{\cosh t=\frac{e^t+e^{-t}}2,\quad\sinh t=\frac{e^t-e^{-t}}2,\quad
+       \tanh t=\frac{\sinh t}{\cosh t}}\gap
+  \eq{\cosh^2t-\sinh^2t=1,\quad(\sinh x)'=\cosh x}\gap
+  \eq{(\cosh x)'=\sinh x,\quad(\tanh x)'=\operatorname{sech}^2x,\quad
+       (\sinh^{-1}x)'=\frac1{\sqrt{1+x^2}}}\gap
+  \eq{(\cosh^{-1}x)'=\frac1{\sqrt{x^2-1}},\quad
+       (\tanh^{-1}x)'=\frac1{1-x^2}}
+\par
+
+\section*{Standard Integrals}
+
+$\int(ax+b)^n\,dx=\frac{(ax+b)^{n+1}}{(n+1)a}+C,\quad
+   \int\ln x\,dx=x\ln x-x,$\\[0pt]
+  $\int\frac1{ax+b}\,dx=\frac1a\ln|ax+b|+C,\quad
+   \int e^{ax+b}\,dx=\frac1a e^{ax+b}+C,$\\[0pt]
+  $\int\sin(ax+b)\,dx=-\frac1a\cos(ax+b)+C,\quad\int\cos(ax+b)\,dx=$\\
+  $\frac1a\sin(ax+b)+C,\quad\int\tan(ax+b)\,dx=\frac1a\ln|\sec(ax+b)|+C,$\\[0pt]
+  $\int\sec(ax+b)\,dx=\frac1a\ln|\sec(ax+b)+\tan(ax+b)|+C,$\\[0pt]
+  $\int\csc(ax+b)\,dx=-\frac1a\ln|\csc(ax+b)+\cot(ax+b)|+C$\\[0pt]
+  $\int\cot(ax+b)\,dx=-\frac1a\ln|\csc(ax+b)|+C,$\\[0pt]
+  $\int\sec^2(ax+b)\,dx=\frac1a\tan(ax+b)+C,$\\[0pt]
+  $\int\csc^2(ax+b)\,dx=-\frac1a\cot(ax+b)+C,$\\[0pt]
+  $\int\sec(ax+b)\tan(ax+b)\,dx=\frac1a\sec(ax+b)+C,$\\[0pt]
+  $\int\csc(ax+b)\cot(ax+b)\,dx=-\frac1a\csc(ax+b)+C,$\\[0pt]
+  $\int\frac1{a^2+x^2}\,dx=\frac1a\arctan\left(\frac xa\right),\quad
+   \int\frac1{a^2+(x+b)^2}\,dx=\frac1a\tan^{-1}\left(\frac{x+b}a\right)+C,$\\[0pt]
+  $\int\frac1{\sqrt{a^2-(x+b)^2}}\,dx=\sin^{-1}\left(\frac{x+b}a\right)+C,$\\[0pt]
+  $\int\frac{-1}{\sqrt{a^2-(x+b)^2}}\,dx=\cos^{-1}\left(\frac{x+b}a\right)+C,$\\[0pt]
+  $\int\frac1{a^2-(x+b)^2}\,dx=\frac1{2a}\ln\left|\frac{x+b+a}{x+b-a}\right|+C,$\\[0pt]
+  $\int\frac1{\sqrt{(x+b)^2+a^2}}\,dx=
+    \ln\left|(x+b)+\sqrt{(x+b)^2+a^2}\right|+C.$
+\par
+
+Found: \href{https://github.com/brianstm/NUS.git}{https://github.com/brianstm/NUS.git}
+\par
+% Portrait filenames are case-sensitive; heaviside.png is intentionally lowercase.
+\Needspace{155mm}
+\section*{Mathematicians}
+
+\noindent\begin{minipage}{\linewidth}
+
+\noindent
+\portrait{Newton.png}{Newton}\hfill
+\portrait{Leibniz.png}{Leibniz}\hfill
+\portrait{Malthus.png}{Malthus}
+\par\vspace{4pt}
+
+\noindent
+\portrait{Verhulst.png}{Verhulst}\hfill
+\portrait{Lagrange.png}{Lagrange}\hfill
+\portrait{Euler.png}{Euler}
+\par\vspace{4pt}
+
+\noindent
+\portrait{Hooke.png}{Hooke}\hfill
+\portrait{Laplace.png}{Laplace}\hfill
+\portrait{heaviside.png}{Heaviside}
+\par\vspace{4pt}
+
+\noindent
+\portrait{Dirac.png}{Dirac}\hfill
+\portrait{Fourier.png}{Fourier}\hfill
+\portrait{Gauss.png}{Gauss}
+\par\vspace{4pt}
+\noindent
+\portrait{JacobBernoulli.png}{Jacob Bernoulli}\hfill
+\portrait{JohannBernoulli.png}{Johann Bernoulli}\hfill
+\portrait{DanielBernoulli.png}{Daniel Bernoulli}
+\par
+\end{minipage}
+\par\vspace{2pt}
+\noindent
+\begingroup
+\setlength{\fboxsep}{6pt}
+\setlength{\fboxrule}{0.5pt}
+\fbox{%
+  \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
+    \raggedright
+    \fontsize{9}{13}\selectfont
+    {\bfseries 마태복음 10:19-20 KRV\par}
+    \vspace{4pt}
+    너희를 넘겨줄 때에 어떻게 또는 무엇을 말할까
+    염려치 말라 그 때에 무슨 말할 것을 주시리니
+    말하는 이는 너희가 아니라 너희 속에서 말씀하시는 자
+    곧 너희 아버지의 성령이시니라
+    \par
+  \end{minipage}%
+}
+\par
+\endgroup
+\end{multicols*}
+\end{document}
