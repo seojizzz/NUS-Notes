@@ -1,0 +1,172 @@
+\contentsline {subsubsection}{Admin matters:}{3}{Doc-Start}%
+\contentsline {section}{L0: Introduction}{3}{section*.1}%
+\contentsline {subsection}{0.0 Programming}{3}{subsection*.2}%
+\contentsline {subsection}{0.1 Basic Program}{4}{subsection*.3}%
+\contentsline {subsection}{0.2 Variables and data storage}{4}{subsection*.4}%
+\contentsline {subsubsection}{0.2.1 Variables}{4}{subsubsection*.5}%
+\contentsline {subsubsection}{0.2.2 Format Specifiers}{7}{subsubsection*.6}%
+\contentsline {subsection}{0.3 Arithmetic and Assignment Operators}{7}{subsection*.7}%
+\contentsline {subsubsection}{0.3.1 Arithmetic Operators}{8}{subsubsection*.8}%
+\contentsline {subsubsection}{0.3.2 Unary operators}{8}{subsubsection*.9}%
+\contentsline {subsubsection}{0.3.3 Comparison Operators}{8}{subsubsection*.10}%
+\contentsline {subsubsection}{0.3.4 Logic Operators}{8}{subsubsection*.11}%
+\contentsline {subsubsection}{0.3.5 Assignment Operators}{9}{subsubsection*.12}%
+\contentsline {subsubsection}{0.3.6 Integer Division}{9}{subsubsection*.13}%
+\contentsline {subsubsection}{0.3.7 Division with \texttt {double}}{9}{subsubsection*.14}%
+\contentsline {subsubsection}{0.3.8 Operator Precedence}{9}{subsubsection*.15}%
+\contentsline {subsection}{0.4 Ternary Operators}{10}{subsection*.16}%
+\contentsline {subsubsection}{Common condition tests}{10}{lstnumber.-23.1}%
+\contentsline {subsection}{0.5 Undefined Behaviour}{10}{subsection*.17}%
+\contentsline {subsubsection}{Example: Division by zero}{11}{subsection*.17}%
+\contentsline {subsubsection}{Integer Overflow}{11}{lstnumber.-26.1}%
+\contentsline {subsubsection}{Key takeaway}{12}{table.13}%
+\contentsline {subsection}{0.X Lab}{12}{subsection*.18}%
+\contentsline {section}{L1: Conditionals and Functions}{13}{section*.19}%
+\contentsline {subsection}{1.1 Abstraction I: Functions}{13}{subsection*.20}%
+\contentsline {subsection}{1.2 Conditional Statements}{13}{subsection*.21}%
+\contentsline {subsubsection}{1.2.1 If/else constructs}{13}{subsubsection*.22}%
+\contentsline {subsubsection}{1.2.2 Comparison and logical operators}{14}{subsubsection*.23}%
+\contentsline {subsubsection}{1.2.3 Boolean operators}{14}{subsubsection*.24}%
+\contentsline {subsection}{1.X Lab}{15}{subsection*.25}%
+\contentsline {section}{L2: Abstractions, Structs, and the Stack}{16}{section*.26}%
+\contentsline {subsection}{2.1 Abstraction II: Functions}{16}{subsection*.27}%
+\contentsline {subsubsection}{2.1.1 Abstraction of Behavior: Functions}{16}{subsubsection*.28}%
+\contentsline {subsubsection}{2.1.2 Abstraction of Data: Structs}{16}{subsubsection*.29}%
+\contentsline {subsection}{2.2 The Stack and Block Scoping}{17}{subsection*.30}%
+\contentsline {subsubsection}{2.2.1 Stack Frames}{17}{subsubsection*.31}%
+\contentsline {subsubsection}{2.2.2 Local variables}{17}{subsubsection*.32}%
+\contentsline {subsection}{2.X Lab}{18}{subsection*.33}%
+\contentsline {section}{L3: Fixed Size arrays and Recursion}{20}{section*.34}%
+\contentsline {subsection}{3.1 Arrays}{20}{subsection*.35}%
+\contentsline {subsubsection}{3.1.1 Array Declaration}{20}{subsubsection*.36}%
+\contentsline {subsubsection}{3.1.2 Initializing elements}{20}{subsubsection*.37}%
+\contentsline {subsubsection}{3.1.3 Accessing an Array (writing)}{21}{subsubsection*.38}%
+\contentsline {subsubsection}{3.1.4 Copying Semantics}{21}{subsubsection*.39}%
+\contentsline {subsubsection}{3.1.5 Arrays as arguments to functions}{21}{subsubsection*.40}%
+\contentsline {subsubsection}{3.1.6 Length of arrays}{22}{subsubsection*.41}%
+\contentsline {subsubsection}{Setting Values inside Functions}{22}{lstnumber.-63.8}%
+\contentsline {subsubsection}{Returning from functions}{22}{lstnumber.-64.9}%
+\contentsline {subsection}{3.2 Arrays and Structs}{22}{subsection*.42}%
+\contentsline {subsubsection}{Zeroing out}{22}{subsection*.42}%
+\contentsline {subsubsection}{UB}{23}{lstnumber.-66.11}%
+\contentsline {subsubsection}{Variable-length arrays}{23}{lstnumber.-67.26}%
+\contentsline {subsection}{3.3 Multidimensional Arrays}{23}{subsection*.43}%
+\contentsline {subsubsection}{3.3.1 Array of arrays}{23}{subsubsection*.44}%
+\contentsline {subsection}{3.4 Recursion}{24}{subsection*.45}%
+\contentsline {subsubsection}{3.4.1 Why Recursion}{24}{subsubsection*.46}%
+\contentsline {subsubsection}{3.4.2 Features of recursion}{24}{subsubsection*.47}%
+\contentsline {subsubsection}{3.4.3 Example: Printing an array in reverse}{24}{subsubsection*.48}%
+\contentsline {subsubsection}{Example: Reverse an array}{25}{lstnumber.-72.9}%
+\contentsline {subsubsection}{Example: Sort an array}{25}{lstnumber.-73.14}%
+\contentsline {subsection}{3.X Lab}{26}{subsection*.49}%
+\contentsline {section}{L4: Loops}{26}{section*.50}%
+\contentsline {subsection}{4.1 \texttt {while} Loops and \texttt {for} Loops}{26}{subsection*.51}%
+\contentsline {subsubsection}{Why loops?}{26}{subsection*.51}%
+\contentsline {subsubsection}{\texttt {while} loops}{26}{lstnumber.-75.11}%
+\contentsline {subsubsection}{\texttt {for} loops}{27}{lstnumber.-78.5}%
+\contentsline {subsection}{4.2 Loop control with \texttt {break}, \texttt {continue}, \texttt {return}}{27}{subsection*.52}%
+\contentsline {subsubsection}{\texttt {break}}{27}{subsection*.52}%
+\contentsline {subsubsection}{\texttt {continue}}{28}{lstnumber.-82.7}%
+\contentsline {subsubsection}{\texttt {return}}{28}{lstnumber.-83.6}%
+\contentsline {subsection}{4.3 Array recursion}{28}{subsection*.53}%
+\contentsline {subsection}{4.4 Examples}{28}{subsection*.54}%
+\contentsline {subsubsection}{Initialize every array element}{28}{subsection*.54}%
+\contentsline {subsubsection}{Nested loops: print a triangle}{28}{lstnumber.-86.5}%
+\contentsline {subsubsection}{A method for planning loops}{29}{lstnumber.-87.8}%
+\contentsline {section}{L5: Pointers and Strings}{29}{section*.55}%
+\contentsline {subsection}{5.1 Pointers}{29}{subsection*.56}%
+\contentsline {subsubsection}{Memory}{29}{subsection*.56}%
+\contentsline {subsubsection}{Pointers}{29}{table.16}%
+\contentsline {subsubsection}{Why pointers?}{30}{lstnumber.-89.2}%
+\contentsline {subsection}{5.2 Address-of (\&) and Dereferencing (*), nullptr, pointers to pointers}{30}{subsection*.57}%
+\contentsline {subsubsection}{5.2.1 Printing Addresses}{30}{subsubsection*.58}%
+\contentsline {subsubsection}{5.2.2 Address (\&) and Dereferencing (*)}{30}{subsubsection*.59}%
+\contentsline {subsubsection}{5.2.3 nullptr}{31}{subsubsection*.60}%
+\contentsline {subsubsection}{5.2.4 Pointer to a pointer}{31}{subsubsection*.61}%
+\contentsline {subsection}{5.3 Arrays, Pointer Arithmetic, \texttt {sizeof}, Structs, Functions}{32}{subsection*.62}%
+\contentsline {subsubsection}{5.3.1 Array Memory Addresses}{32}{subsubsection*.63}%
+\contentsline {subsubsection}{5.3.2 Pointer arithmetic}{33}{subsubsection*.64}%
+\contentsline {subsubsection}{5.3.3 \texttt {sizeof}}{33}{subsubsection*.65}%
+\contentsline {subsubsection}{Important array--pointer relationship}{34}{lstnumber.-102.13}%
+\contentsline {subsubsection}{5.3.4 Structs}{34}{subsubsection*.66}%
+\contentsline {subsubsection}{5.3.5 Functions}{35}{subsubsection*.67}%
+\contentsline {subsection}{5.4 Strings}{36}{subsection*.68}%
+\contentsline {subsubsection}{5.4.1 Strings and the null character}{36}{subsubsection*.69}%
+\contentsline {subsubsection}{5.4.2 Modifiable and read-only strings}{36}{subsubsection*.70}%
+\contentsline {subsubsection}{5.4.3 Printing strings}{37}{subsubsection*.71}%
+\contentsline {subsubsection}{5.4.4 \texttt {const}}{37}{subsubsection*.72}%
+\contentsline {subsection}{5.5 Pointer Provenance}{38}{subsection*.73}%
+\contentsline {subsubsection}{5.5.1 Origins: what does the pointer represent?}{39}{subsubsection*.74}%
+\contentsline {subsubsection}{5.5.2 Spatial component: access within valid bounds}{39}{subsubsection*.75}%
+\contentsline {subsubsection}{5.5.3 Aliasing and overlapping ranges}{40}{subsubsection*.76}%
+\contentsline {subsubsection}{5.5.4 Temporal component: the pointed-to object must still exist}{41}{subsubsection*.77}%
+\contentsline {subsubsection}{5.5.5 Uninitialized pointers and pointers to pointers}{41}{subsubsection*.78}%
+\contentsline {section}{L6: Dynamic memory allocation}{42}{section*.79}%
+\contentsline {subsection}{6.1 Memory regions, pointers, and \texttt {const}}{42}{subsection*.80}%
+\contentsline {subsubsection}{6.1.1 Where objects are stored}{42}{subsubsection*.81}%
+\contentsline {subsubsection}{6.1.2 \texttt {const} in different positions}{42}{subsubsection*.82}%
+\contentsline {subsection}{6.2 Automatic and dynamic lifetimes}{43}{subsection*.83}%
+\contentsline {subsubsection}{6.2.1 Why returning a local array fails}{43}{subsubsection*.84}%
+\contentsline {subsubsection}{6.2.2 Dynamic allocation}{43}{subsubsection*.85}%
+\contentsline {subsection}{6.3 The allocation family: \texttt {\textless {}stdlib.h\textgreater {}}}{43}{subsection*.86}%
+\contentsline {subsubsection}{6.3.1 Allocating the correct number of bytes}{43}{subsubsection*.87}%
+\contentsline {subsubsection}{6.3.2 Returning a dynamically allocated array}{44}{subsubsection*.88}%
+\contentsline {subsubsection}{6.3.3 \texttt {calloc}}{44}{subsubsection*.89}%
+\contentsline {subsubsection}{6.3.4 \texttt {realloc}}{44}{subsubsection*.90}%
+\contentsline {subsection}{6.4 Freeing memory and common mistakes}{45}{subsection*.91}%
+\contentsline {subsubsection}{6.4.1 Rules for \texttt {free}}{45}{subsubsection*.92}%
+\contentsline {subsubsection}{6.4.2 Common errors}{45}{subsubsection*.93}%
+\contentsline {subsection}{6.5 Dynamically allocated grids and structs}{45}{subsection*.94}%
+\contentsline {subsubsection}{6.5.1 An array of row pointers}{45}{subsubsection*.95}%
+\contentsline {subsubsection}{6.5.2 Pointer expressions in a grid}{46}{subsubsection*.96}%
+\contentsline {subsubsection}{6.5.3 An array of pointers is different from a fixed 2D array}{46}{subsubsection*.97}%
+\contentsline {subsubsection}{6.5.4 Allocating a struct}{47}{subsubsection*.98}%
+\contentsline {subsection}{6.6 Ownership and borrowing}{47}{subsection*.99}%
+\contentsline {subsubsection}{6.6.1 Ownership through function calls}{47}{subsubsection*.100}%
+\contentsline {subsubsection}{6.6.2 Returning an allocation through \texttt {int\ **}}{48}{subsubsection*.101}%
+\contentsline {section}{L7. Recursion II}{48}{section*.102}%
+\contentsline {subsection}{7.1 Ownership across multiple functions}{48}{subsection*.103}%
+\contentsline {subsection}{7.2 Recursive data structures}{49}{subsection*.104}%
+\contentsline {subsection}{7.3 Linked lists}{49}{subsection*.105}%
+\contentsline {subsubsection}{7.3.1 Definition}{49}{subsubsection*.106}%
+\contentsline {subsubsection}{7.3.2 Print and sum}{49}{subsubsection*.107}%
+\contentsline {subsubsection}{7.3.3 Freeing a list}{50}{subsubsection*.108}%
+\contentsline {subsubsection}{7.3.4 Reversing a list}{50}{subsubsection*.109}%
+\contentsline {subsection}{7.4 Trees}{50}{subsection*.110}%
+\contentsline {subsubsection}{7.4.1 A tree with a linked list of children}{50}{subsubsection*.111}%
+\contentsline {subsubsection}{7.4.2 Traversing and counting}{51}{subsubsection*.112}%
+\contentsline {subsubsection}{7.4.3 Freeing an owned tree}{51}{subsubsection*.113}%
+\contentsline {subsection}{7.5 Planning recursive functions}{51}{subsection*.114}%
+\contentsline {section}{L8. Problem solving techniques: recursive backtracking and loop invariants}{52}{section*.115}%
+\contentsline {subsection}{8.1 Recursive backtracking}{52}{subsection*.116}%
+\contentsline {subsection}{8.2 Example: generating permutations}{52}{subsection*.117}%
+\contentsline {subsubsection}{8.2.1 The slide approach: generate, then verify}{52}{subsubsection*.118}%
+\contentsline {subsection}{8.3 Example: 4-by-4 Sudoku}{53}{subsection*.119}%
+\contentsline {subsubsection}{8.3.1 Testing a possible placement}{53}{subsubsection*.120}%
+\contentsline {subsubsection}{8.3.2 Solving with backtracking}{53}{subsubsection*.121}%
+\contentsline {subsection}{8.4 Reasoning about loops using invariants}{54}{subsection*.122}%
+\contentsline {subsubsection}{8.4.1 Initialization, preservation, and termination}{54}{subsubsection*.123}%
+\contentsline {subsubsection}{8.4.2 Bounds must be checked before array access}{55}{subsubsection*.124}%
+\contentsline {subsection}{8.5 Linear search and summation}{55}{subsection*.125}%
+\contentsline {subsubsection}{8.5.1 Linear search}{55}{subsubsection*.126}%
+\contentsline {subsubsection}{8.5.2 Summation}{55}{subsubsection*.127}%
+\contentsline {subsection}{8.6 Binary search}{55}{subsection*.128}%
+\contentsline {subsubsection}{8.6.1 Boundary meanings}{56}{subsubsection*.129}%
+\contentsline {subsubsection}{8.6.2 Why it works}{56}{subsubsection*.130}%
+\contentsline {subsection}{8.7 Partitioning an array}{56}{subsection*.131}%
+\contentsline {subsubsection}{8.7.1 Invariant and implementation}{56}{subsubsection*.132}%
+\contentsline {subsubsection}{8.7.2 Mistakes illustrated in the slides}{57}{subsubsection*.133}%
+\contentsline {section}{L9. Static lifetimes, file scope, and input}{57}{section*.134}%
+\contentsline {subsection}{9.1 Scope and lifetime are different}{57}{subsection*.135}%
+\contentsline {subsection}{9.2 File-scope variables: shared state}{58}{subsection*.136}%
+\contentsline {subsubsection}{9.2.1 Uses and tradeoffs}{58}{subsubsection*.137}%
+\contentsline {subsubsection}{9.2.2 Library error state: \texttt {errno}}{58}{subsubsection*.138}%
+\contentsline {subsection}{9.3 Local \texttt {static} variables}{59}{subsection*.139}%
+\contentsline {subsection}{9.4 \texttt {strtok}: persistent state in a library function}{59}{subsection*.140}%
+\contentsline {subsection}{9.5 A general input-processing workflow}{60}{subsection*.141}%
+\contentsline {subsection}{9.6 \texttt {getchar}: one character at a time}{60}{subsection*.142}%
+\contentsline {subsection}{9.7 \texttt {fgets}: reading into a caller-provided buffer}{60}{subsection*.143}%
+\contentsline {subsection}{9.8 \texttt {getline}: reading a dynamically sized line}{61}{subsection*.144}%
+\contentsline {subsection}{9.9 \texttt {sscanf}: converting a string into values}{61}{subsection*.145}%
+\contentsline {subsubsection}{9.9.1 Common conversion formats}{62}{subsubsection*.146}%
+\contentsline {subsection}{9.10 The course's problem-solving workflow}{62}{subsection*.147}%
