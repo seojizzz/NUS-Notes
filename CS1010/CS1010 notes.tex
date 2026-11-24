@@ -1,0 +1,5408 @@
+% CS1010 Programming Methodology - Lecture Notes
+% Updated from lecture-notes(1).md; existing L0--L5 refinements retained.
+% Includes L6--L9 and the source's supplementary, explicitly labelled L8 draft.
+% Compile with pdfLaTeX; rerun until contents and cross-references settle.
+% Self-contained: no external code files, Pygments, or shell escape required.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=20mm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{upquote}
+\usepackage{longtable,booktabs,array,calc}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{needspace}
+\usepackage{xparse}
+\usepackage{xurl}
+\usepackage[unicode]{hyperref}
+\usepackage{bookmark}
+
+\definecolor{HeadingBlue}{HTML}{234967}
+\definecolor{LinkBlue}{HTML}{245E8C}
+\definecolor{CodeBackground}{HTML}{F2F2F2}
+\definecolor{CodeBorder}{HTML}{D9D9D9}
+\definecolor{CodeText}{HTML}{242424}
+\definecolor{CodeKeyword}{HTML}{0000FF}
+\definecolor{CodeFunction}{HTML}{795E26}
+\definecolor{CodeType}{HTML}{267F99}
+\definecolor{CodeString}{HTML}{A31515}
+\definecolor{CodeComment}{HTML}{008000}
+\definecolor{CodePreprocessor}{HTML}{AF00DB}
+
+\hypersetup{
+  colorlinks=true, linkcolor=LinkBlue, urlcolor=LinkBlue,
+  pdftitle={CS1010 Programming Methodology - Lecture Notes},
+  pdfauthor={Seojin}, bookmarksopen=true, bookmarksopenlevel=1
+}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt minus 1pt}
+\setlength{\emergencystretch}{3em}
+\setcounter{tocdepth}{2} % Include headings and subheadings only.
+% Numbers are already written in the source headings. Disabling automatic
+% numbering keeps 0.0, 0.X, L0, etc., without adding a second number.
+\setcounter{secnumdepth}{-1}
+\setlist{topsep=4pt,itemsep=2pt,parsep=0pt,leftmargin=*}
+\setlist[description]{style=nextline,font=\normalfont\bfseries}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\titleformat{\section}{\Large\bfseries\color{HeadingBlue}}{}{0pt}{}
+\titleformat{\subsection}{\large\bfseries\color{HeadingBlue}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{20pt plus 3pt minus 2pt}{8pt}
+\titlespacing*{\subsection}{0pt}{14pt plus 2pt minus 1pt}{6pt}
+\titlespacing*{\subsubsection}{0pt}{10pt plus 2pt minus 1pt}{4pt}
+
+% Markdown #, ## and ### map to the following commands.
+% Use starred forms for headings with no number in the source. Both forms
+% are eligible for the TOC, subject to tocdepth. Keep source labels in arguments.
+\NewDocumentCommand{\heading}{s m}{%
+  \Needspace{8\baselineskip}%
+  \IfBooleanTF{#1}{\section*{#2}\addcontentsline{toc}{section}{#2}}{\section{#2}}}
+\NewDocumentCommand{\subheading}{s m}{%
+  \Needspace{5\baselineskip}%
+  \IfBooleanTF{#1}{\subsection*{#2}\addcontentsline{toc}{subsection}{#2}}{\subsection{#2}}}
+\NewDocumentCommand{\subsubheading}{s m}{%
+  \Needspace{4\baselineskip}%
+  \IfBooleanTF{#1}{\subsubsection*{#2}\addcontentsline{toc}{subsubsection}{#2}}{\subsubsection{#2}}}
+\pdfstringdefDisableCommands{\def\texttt#1{#1}}
+
+% VS Code-inspired light colours on grey, with wrapping and page breaks.
+\lstdefinestyle{codebase}{
+  basicstyle=\ttfamily\fontsize{9}{11}\selectfont\color{CodeText},
+  backgroundcolor=\color{CodeBackground},
+  frame=single, rulecolor=\color{CodeBorder}, framerule=0.3pt,
+  framesep=5pt, xleftmargin=6pt, xrightmargin=6pt,
+  aboveskip=7pt, belowskip=7pt,
+  columns=fullflexible, keepspaces=true, tabsize=4,
+  breaklines=true, breakatwhitespace=false, breakindent=1.5em,
+  showstringspaces=false, showspaces=false, showtabs=false,
+  upquote=true, numbers=none, captionpos=b,
+  literate={→}{{$\rightarrow$}}1 {—}{{---}}3 {’}{{'}}1
+}
+\lstdefinestyle{cscode}{
+  style=codebase, language=C,
+  keywordstyle=\color{CodeKeyword},
+  keywordstyle=[2]\color{CodeFunction},
+  keywordstyle=[3]\color{CodeType},
+  commentstyle=\color{CodeComment},
+  stringstyle=\color{CodeString},
+  directivestyle=\color{CodePreprocessor},
+  morekeywords={bool,true,false,nullptr,alignas,alignof,static_assert,thread_local,typeof,typeof_unqual,constexpr},
+  morekeywords=[2]{add,all_distinct,bad_costs,bar,binary_exists,calloc,can_place,copy_arr,correct_copy,correct_ptr,count_larger_than,count_nodes,create_grid,create_ones,fgets,find_value,first_positive,foo,fprintf,free,free_grid,free_list,free_tree,get_arr,get_costs,get_pos,getchar,getline,grade,has_one_inside_array,increment,init_array,is_even,is_valid_solution,leak,log_msg,main,malloc,param,partition,permutations,permute,permute_h,print_arr,print_arr_from,print_arr_reverse,print_doublearr_index,print_last_element,print_list,print_movement,print_soln,print_str,print_tree,print_triangle,printf,putchar,read_int,read_point,realloc,redirect,reverse_arr,reverse_arr_helper,reverse_list,safe_divide,set_copy,set_doublearr_index,set_ptr,shift_left,solve_sudoku,sort_arr,sscanf,strcpy,strlen,strtok,sum_array,sum_list},
+  morekeywords=[3]{size_t,ssize_t,ptrdiff_t,Point,Position,Acceleration,LinkedList,ChildLink,Tree}
+}
+% Add new function names to morekeywords=[2] above when extending the notes.
+\lstdefinestyle{shellcode}{
+  style=codebase, language=bash,
+  keywordstyle=\color{CodeKeyword},
+  commentstyle=\color{CodeComment}, stringstyle=\color{CodeString}
+}
+\lstdefinestyle{plaincode}{style=codebase,language={}}
+\lstset{style=cscode}
+
+% Tables span the available width and can continue onto subsequent pages.
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\AtBeginEnvironment{longtable}{\small\setlength{\parskip}{0pt}}
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\providecommand{\pandocbounded}[1]{#1}
+
+\title{\textbf{CS1010 Programming Methodology}\\[4pt]\Large Lecture Notes}
+\author{Seojin}
+\date{}
+
+\begin{document}
+\maketitle
+% Compact TOC spacing; the main notes retain their normal paragraph spacing.
+\begingroup
+\setlength{\parskip}{0pt}
+\linespread{0.95}\selectfont
+\makeatletter
+\patchcmd{\l@section}{1.0em}{0.35em}{}{}
+\makeatother
+\tableofcontents
+\endgroup
+\clearpage
+
+\subsubheading*{Admin matters:}
+\label{admin-matters}
+\hypertarget{admin-matters}{}
+
+\textbf{Instructors}:
+
+\begin{itemize}
+\tightlist
+\item
+  Dr.~Eldon Chung
+\item
+  Dr.~Sriram Sami
+\end{itemize}
+
+\textbf{Schedule}:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4200}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2900}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Activity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Time
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Venue
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Lecture & Monday 4pm-6pm & I3-LT38 \\
+Tutorial & Wednesday 9am-10am & COM1-0120 \\
+Lab & Thursday 4pm-6pm & COM1-0120 \\
+\end{longtable}
+
+\textbf{Exams}:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Activity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Date
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Time
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Practical Exam & Tue, 15 Sep & 6pm-9pm \\
+Midterm & Mon, 5 Oct & 4pm-6pm \\
+Practical Exam & Tue, 13 Oct & 6pm-9pm \\
+Practical Exam & Tue, 10 Nov & 6pm-9pm \\
+\textbf{Final} & Wed, 25 Nov & 9am-11am \\
+\end{longtable}
+
+\textbf{More info}: \href{https://cs1010.org}{CS1010 website}
+
+\heading{L0: Introduction}
+\label{l0-introduction}
+\hypertarget{l0-introduction}{}
+
+\subheading{0.0 Programming}
+\label{00-programming}
+\hypertarget{00-programming}{}
+
+\begin{description}
+\tightlist
+\item[\emph{Program}] is a set of instructions that a computer runs.
+\item[\emph{Programming}] is writing code that is used to create a program.
+\end{description}
+
+More specifically,
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The \textbf{CPU} (Central Processing Unit) reads information from the computer memory.
+\item
+  The CPU then writes information to the \emph{Program Code}. The program code that we make is stored in the memory.
+\item
+  The Program stores data (Program data) for intermediate steps. These are also stored in memory.
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  We write in a higher-level programming language like C to create instructions that the CPU has to execute. A \textbf{compiler} (e.g.~\texttt{clang} or \texttt{gcc}) takes the C code and produces assembly code.
+\item
+  We use high-level language and compilers so that our code is \emph{portable}; we leave lower level details to be handled by the compiler.
+\item
+  We also leave hardware level optimisations to be handled by compilers.
+\end{itemize}
+
+\begin{description}
+\tightlist
+\item[\textbf{C}]
+is a \emph{compiled} programming language.
+\item[\emph{Compiler}]
+has to take C code written to produce assembly instructions that the CPU will execute.
+\end{description}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Pros
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Cons
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+lots of control: imperative, low level & More work required by programmer \\
+Simple language & Many footguns \\
+little to no overhead & \\
+\end{longtable}
+
+Nevertheless, C is:
+
+\begin{itemize}
+\tightlist
+\item
+  Low-level enough for hardware (firmware)
+\item
+  Widely supported across embedded systems
+\item
+  Pervasive in system code
+\item
+  Good starter language.
+\end{itemize}
+
+\subheading{0.1 Basic Program}
+\label{01-basic-program}
+\hypertarget{01-basic-program}{}
+
+Anatomy:
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+int main(void) {
+    printf("Hello world!\n");
+    return 0;
+}
+\end{lstlisting}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{\#include\ \textless{}stdio.h\textgreater{}} makes the C ``standard input/output'' header file available to this program.
+\item
+  \texttt{int\ main(void)\ \{} declares the main function, and code \textbf{starts} executing from within \texttt{main}. The \texttt{void} means that the function does not take any input arguments. The opening brace \texttt{\{} means the start of the code within \texttt{main}.
+\item
+  \texttt{printf("Hello\ world!\textbackslash{}n");} Creates a string \texttt{"Hello\ world!"} and a new line character \texttt{\textbackslash{}n} and passes the argument to \texttt{printf}, which is sent to the standard output of the program
+\item
+  Semicolon \texttt{;} indicates the end of the statement.
+\item
+  Closing brace \texttt{\}} ends the code within \texttt{main}.
+\end{enumerate}
+
+\textbf{Procedure}:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create file with extension .c, (\emph{e.g.} \texttt{hello.c})
+\item
+  Write C code inside.
+\item
+  Compile C code to an executable program\textbackslash{}
+\end{enumerate}
+
+\begin{lstlisting}[style=shellcode]
+clang -o hello hello.c
+\end{lstlisting}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Run if no errors.
+\end{enumerate}
+
+\begin{lstlisting}[style=shellcode]
+./hello
+\end{lstlisting}
+
+\subheading{0.2 Variables and data storage}
+\label{02-variables-and-data-storage}
+\hypertarget{02-variables-and-data-storage}{}
+
+\subsubheading{0.2.1 Variables}
+\label{021-variables}
+\hypertarget{021-variables}{}
+
+Variables:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2100}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3200}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1800}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Type name(s)}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Min value}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Max value}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Size (bytes)}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{char} & -128 & +127 & 1 (8 bits) \\
+\texttt{unsigned\ char} & 0 & +255 & 1 (8 bits) \\
+\texttt{int} & -32768 (-\(2^{15}\)) & +32767 (\(2^{15}-1\)) & 2 \\
+\texttt{unsigned\ int} & 0 & +65535 (\(2^{16}-1\)) & 2 \\
+\texttt{long} & -2147483648 (\(2^{31}\)) & +2147483647 (\(2^{31}-1\)) & 4 \\
+\texttt{unsigned\ long} & 0 & +4294967295 (\(2^{32}-1\)) & 4 \\
+\texttt{unsigned\ long\ long} & 0 & \(2^{64}-1\) & 8 \\
+\texttt{float} & 6-7 d.p. & 6-7 d.p. & 4 \\
+\texttt{double} & 15-17 d.p. & 15-17 d.p. & 8 \\
+\end{longtable}
+
+\emph{When to use which type}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{char} for ASCII characters
+\item
+  \texttt{int} for default integral types
+\item
+  \texttt{unsigned\ int} if integer \textgreater{} 0
+\item
+  \texttt{float} if you want to save memory and use decimals.
+\item
+  \texttt{double} if your values might be more precise decimal. Use double and instead of float, unless with good reason.
+\end{itemize}
+
+\emph{Initialization} You can also initialize a variable without declaring its value.
+
+\begin{lstlisting}[style=cscode]
+int a;
+int b;
+a = 372;
+b = a - 200;
+\end{lstlisting}
+
+\textbf{Overflow} If you have an \texttt{unsigned\ int} number at 255, and you increment it, you'll get 256 in return. As expected. If you have an \texttt{unsigned\ char} number at 255, and you increment it, you'll get 0 in return. It resets starting from the initial possible value.
+
+If you have a \texttt{unsigned\ char} number at 255 and you add 10 to it, you'll get the number 9:
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    unsigned char j = 255;
+    j = j + 10;
+    printf("%u", j); /* 9 */
+}
+\end{lstlisting}
+
+If you don't have a signed value, the behavior is undefined. It will basically give you a huge number which can vary, like in this case:
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    char j = 127;
+    j = j + 10;
+    printf("%u", j); /* 4294967177 */
+}
+\end{lstlisting}
+
+In other words, C does not protect you from going over the limits of a type. You need to take care of this yourself. However, if you initialize a variable with a wrong value, you will likely receive a warning:
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    char j = 1000;
+    char i;
+    i = 9999;
+    // This will give warning.
+}
+\end{lstlisting}
+
+However, incrementing the number will not give a warning and overflow.
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    char j = 0;
+    j += 1000;
+}
+\end{lstlisting}
+
+\textbf{ASCII table:}
+
+\begingroup
+\setlength{\tabcolsep}{7pt}
+\begin{longtable}{@{}*{5}{r>{\ttfamily\arraybackslash}c}@{}}
+\toprule
+\textbf{Dec} & \multicolumn{1}{c}{\textbf{Symbol}} & \textbf{Dec} & \multicolumn{1}{c}{\textbf{Symbol}} & \textbf{Dec} & \multicolumn{1}{c}{\textbf{Symbol}} & \textbf{Dec} & \multicolumn{1}{c}{\textbf{Symbol}} & \textbf{Dec} & \multicolumn{1}{c}{\textbf{Symbol}} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+48 & 0 & 63 & ? & 78 & N & 93 & ] & 108 & l \\
+49 & 1 & 64 & @ & 79 & O & 94 & \textasciicircum{} & 109 & m \\
+50 & 2 & 65 & A & 80 & P & 95 & \_ & 110 & n \\
+51 & 3 & 66 & B & 81 & Q & 96 & \textasciigrave{} & 111 & o \\
+52 & 4 & 67 & C & 82 & R & 97 & a & 112 & p \\
+53 & 5 & 68 & D & 83 & S & 98 & b & 113 & q \\
+54 & 6 & 69 & E & 84 & T & 99 & c & 114 & r \\
+55 & 7 & 70 & F & 85 & U & 100 & d & 115 & s \\
+56 & 8 & 71 & G & 86 & V & 101 & e & 116 & t \\
+57 & 9 & 72 & H & 87 & W & 102 & f & 117 & u \\
+58 & : & 73 & I & 88 & X & 103 & g & 118 & v \\
+59 & ; & 74 & J & 89 & Y & 104 & h & 119 & w \\
+60 & \textless{} & 75 & K & 90 & Z & 105 & i & 120 & x \\
+61 & = & 76 & L & 91 & [ & 106 & j & 121 & y \\
+62 & \textgreater{} & 77 & M & 92 & \textbackslash{} & 107 & k & 122 & z \\
+\end{longtable}
+\endgroup
+
+It is possible to find the size of a variable.
+
+\textbf{sizeof()}
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+int main(void) {
+    int myInt;
+    float myFloat;
+    double myDouble;
+    char myChar;
+    printf("%d\n", sizeof(myInt));
+    printf("%d\n", sizeof(myFloat));
+    printf("%d\n", sizeof(myDouble));
+    printf("%d\n", sizeof(myChar));
+    return 0;
+}
+\end{lstlisting}
+
+output:
+
+\begin{lstlisting}[style=plaincode]
+4
+4
+8
+1
+\end{lstlisting}
+
+\subsubheading{0.2.2 Format Specifiers}
+\label{022-format-specifiers}
+\hypertarget{022-format-specifiers}{}
+
+\emph{Format specifiers}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1600}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.6500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1900}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Specifier}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Output}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Example}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{d} or \texttt{i} & Signed decimal integer & \texttt{392} \\
+\texttt{u} & Unsigned decimal integer & \texttt{7235} \\
+\texttt{o} & Unsigned octal & \texttt{610} \\
+\texttt{x} & Unsigned hexadecimal integer & \texttt{7fa} \\
+\texttt{X} & Unsigned hexadecimal integer (uppercase) & \texttt{7FA} \\
+\texttt{f} & Decimal floating point, lowercase & \texttt{392.65} \\
+\texttt{F} & Decimal floating point, uppercase & \texttt{392.65} \\
+\texttt{e} & Scientific notation (mantissa/exponent), lowercase & \texttt{3.9265e+2} \\
+\texttt{E} & Scientific notation (mantissa/exponent), uppercase & \texttt{3.9265E+2} \\
+\texttt{g} & Shortest representation: \texttt{\%e} or \texttt{\%f} & \texttt{392.65} \\
+\texttt{G} & Shortest representation: \texttt{\%E} or \texttt{\%F} & \texttt{392.65} \\
+\texttt{a} & Hexadecimal floating point, lowercase & \texttt{-0xc.90fep-2} \\
+\texttt{A} & Hexadecimal floating point, uppercase & \texttt{-0XC.90FEP-2} \\
+\texttt{c} & Character & \texttt{a} \\
+\texttt{s} & String of characters & \texttt{sample} \\
+\texttt{p} & Pointer address & \texttt{b8000000} \\
+\texttt{n} & Nothing printed. Argument must be a pointer to a signed \texttt{int}; the number of characters written so far is stored there. & --- \\
+\texttt{\%} & A literal \texttt{\%} character & \texttt{\%} \\
+\end{longtable}
+
+Below is an example:
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    int sixtyseven = 67;
+    double pi = 3.1415926535897;
+    char ahh = 'a';
+    char pain[] = "what?"; //adding [] to the end of the variable will make it a string instead of a char
+    printf("Integer: %d\n", sixtyseven);
+    printf("2dp Float: %.2f\n", pi);
+    printf("6dp Float: %.6f\n", pi);
+    printf("Char: %c\n", ahh);
+    printf("String: %s\n", pain);
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Integer Truncation} When you output the value of \texttt{double} with \texttt{\%d}, you will get the \emph{floor} of the value, truncating the decimal point and leaving the integer part.
+
+\begin{lstlisting}[style=cscode]
+int x = 5;
+x = x + 0.1; // Behind the scenes: (int)((double)5.0 + 0.1)
+printf("%d", x); 
+\end{lstlisting}
+
+\subheading{0.3 Arithmetic and Assignment Operators}
+\label{03-arithmetic-and-assignment-operators}
+\hypertarget{03-arithmetic-and-assignment-operators}{}
+
+\subsubheading{0.3.1 Arithmetic Operators}
+\label{031-arithmetic-operators}
+\hypertarget{031-arithmetic-operators}{}
+
+\textbf{Arithmetic operators} let us do math:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Operator
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Example
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{=} & Assignment & \texttt{x=1} \\
+\texttt{+} & Addition & \texttt{x\ +\ y} \\
+\texttt{-} & Subtraction & \texttt{x\ -\ y} \\
+\texttt{*} & Multiplication & \texttt{x\ *\ y} \\
+\texttt{/} & Division & \texttt{x\ /\ y} \\
+\texttt{\%} & Modulo (remainder) & \texttt{x\ \%\ y} \\
+\end{longtable}
+
+\subsubheading{0.3.2 Unary operators}
+\label{032-unary-operators}
+\hypertarget{032-unary-operators}{}
+
+\textbf{Unary operators} only take one operand:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Operator
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Example
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{+} & Unary plus & \texttt{+a} \\
+\texttt{-} & Unary minus & \texttt{-a} \\
+\texttt{++} & Increment & \texttt{a++} or \texttt{++a} \\
+\texttt{-\/-} & Decrement & \texttt{a-\/-} or \texttt{-\/-a} \\
+\end{longtable}
+
+Example:
+
+\begin{lstlisting}[style=cscode]
+int a = 2;
+int b;
+b = a++ /* b is 2, a is 3 */
+b = ++a /* b is 4, a is 4 */
+b = a-- /* b is 4, a is 3 */
+b = --a /* b is 2, a is 2 */
+\end{lstlisting}
+
+\subsubheading{0.3.3 Comparison Operators}
+\label{033-comparison-operators}
+\hypertarget{033-comparison-operators}{}
+
+\textbf{Comparison Operators}
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Operator
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Example
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{==} & Equal operator & \texttt{a\ ==\ b} \\
+\texttt{!=} & Not equal operator & \texttt{a\ !=\ b} \\
+\texttt{\textgreater{}} & Bigger than & \texttt{a\ \textgreater{}\ b} \\
+\texttt{\textless{}} & Less than & \texttt{a\ \textless{}\ b} \\
+\texttt{\textgreater{}=} & Bigger than or equal to & \texttt{a\ \textgreater{}=\ b} \\
+\texttt{\textless{}=} & Less than or equal to & \texttt{a\ \textless{}=\ b} \\
+\end{longtable}
+
+\subsubheading{0.3.4 Logic Operators}
+\label{034-logic-operators}
+\hypertarget{034-logic-operators}{}
+
+\textbf{Logical operators:} work with boolean values.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Operator
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+example
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{!} & NOT & \texttt{!a} \\
+\texttt{\&} & AND & \texttt{a\ \&\&\ b} \\
+\texttt{\textbar{}} & OR & \texttt{a\ \textbar{}\textbar{}\ b} \\
+\end{longtable}
+
+\subsubheading{0.3.5 Assignment Operators}
+\label{035-assignment-operators}
+\hypertarget{035-assignment-operators}{}
+
+\textbf{Assignment Operators} perform arithmetic transformation and and assignment
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Operator
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Example
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{+=} & Addition assignment & \texttt{a\ +=\ b} \\
+\texttt{-=} & Subtraction assignment & \texttt{a\ -=\ b} \\
+\texttt{*=} & Multiplication assignment & \texttt{a\ *=\ b} \\
+\texttt{/=} & Division assignment & \texttt{a\ /=\ b} \\
+\texttt{\%=} & Modulo assignment & \texttt{a\ \%=\ b} \\
+\end{longtable}
+
+\subsubheading{0.3.6 Integer Division}
+\label{036-integer-division}
+\hypertarget{036-integer-division}{}
+
+If \texttt{x} and \texttt{y} are \textbf{integer-like types}, \texttt{/} \textbf{truncates the fractional part}.
+
+\begin{lstlisting}[style=cscode]
+printf("%d\n", 50 / 20);  // 2
+printf("%d\n", 50 % 20);  // 10
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{50\ /\ 20} → \texttt{2}, not \texttt{2.5}
+\item
+  \texttt{50\ \%\ 20} → \texttt{10} (remainder)
+\item
+  \texttt{\%} only works on \textbf{integral types}; not \texttt{float}/\texttt{double}.
+\end{itemize}
+
+\subsubheading{0.3.7 Division with \texttt{double}}
+\label{037-division-with-double}
+\hypertarget{037-division-with-double}{}
+
+If you want to preserve decimal values, make sure \textbf{at least one operand is \texttt{double}/\texttt{float}}:
+
+\begin{lstlisting}[style=cscode]
+int x = 50;
+
+x / 20       // 2
+x / 20.0     // 2.5
+50.0 / 20.0  // 2.5
+(double)x / 20  // 2.5
+\end{lstlisting}
+
+You can explicitly convert a value using a \textbf{cast}:
+
+\begin{lstlisting}[style=cscode]
+(double)x
+\end{lstlisting}
+
+\subsubheading{0.3.8 Operator Precedence}
+\label{038-operator-precedence}
+\hypertarget{038-operator-precedence}{}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{*}, \texttt{/}, \texttt{\%} have \textbf{higher priority} than \texttt{+} and \texttt{-}
+\item
+  \texttt{()} has the \textbf{highest priority}
+\item
+  Similar to the normal order of operations in mathematics.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+x + 3 / x * (3 + x)
+\end{lstlisting}
+
+is evaluated according to these precedence rules.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{quote}
+\textbf{Important:} \texttt{=} means \textbf{assignment}, not mathematical equality.
+\end{quote}
+
+\begin{lstlisting}[style=cscode]
+int x = 5;
+x = x + 2;  // x is now 7
+x += 2;     // x is now 9
+\end{lstlisting}
+
+Assignment \textbf{changes the state of the program} by changing the value stored in a variable.
+
+\subheading{0.4 Ternary Operators}
+\label{04-ternary-operators}
+\hypertarget{04-ternary-operators}{}
+
+The \textbf{ternary operator} provides a compact way to choose between two expressions based on a condition.
+
+\begin{lstlisting}[style=cscode]
+<expression1> ? <expression2> : <expression3>;
+\end{lstlisting}
+
+In English:
+
+\begin{quote}
+If \texttt{\textless{}expression1\textgreater{}} is true, evaluate \texttt{\textless{}expression2\textgreater{}}; otherwise, evaluate \texttt{\textless{}expression3\textgreater{}}.
+\end{quote}
+
+Example:
+
+\begin{lstlisting}[style=cscode]
+double product_cost = 888;
+
+double discount_amt = (product_cost >= 670) ? 2 : 0;
+\end{lstlisting}
+
+Since \texttt{product\_cost} is \texttt{888}:
+
+\begin{lstlisting}[style=plaincode]
+888 >= 670 → true
+\end{lstlisting}
+
+Therefore:
+
+\begin{lstlisting}[style=plaincode]
+discount_amt = 2
+\end{lstlisting}
+
+If \texttt{product\_cost} were less than \texttt{670}:
+
+\begin{lstlisting}[style=plaincode]
+discount_amt = 0
+\end{lstlisting}
+
+\subsubheading*{Common condition tests}
+\label{common-condition-tests}
+\hypertarget{common-condition-tests}{}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Operator
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{\textgreater{}} & More than \\
+\texttt{\textgreater{}=} & More than or equal to \\
+\texttt{\textless{}} & Less than \\
+\texttt{\textless{}=} & Less than or equal to \\
+\texttt{==} & Equal to \\
+\texttt{!=} & Not equal to \\
+\end{longtable}
+
+Another example:
+
+\begin{lstlisting}[style=cscode]
+(product_cost >= 670)
+    ? printf("You've reached min-spend")
+    : printf("Spend another %f cents\n", 670 - product_cost);
+\end{lstlisting}
+
+The ternary operator is useful for \textbf{simple conditions} where there are two possible outcomes.
+
+\subheading{0.5 Undefined Behaviour}
+\label{05-undefined-behaviour}
+\hypertarget{05-undefined-behaviour}{}
+
+\textbf{Undefined Behaviour (UB)} is a major recurring aspect of C.
+
+C is defined by a document called the \textbf{C Standard}. CS1010 uses the \textbf{C23 standard}.
+
+The standard specifies what should happen for valid C code. However, for some erroneous code, the standard \textbf{imposes no requirements}.
+
+If a program contains \textbf{undefined behaviour}:
+
+\begin{quote}
+The program is allowed to do anything.
+\end{quote}
+
+It might:
+
+\begin{itemize}
+\tightlist
+\item
+  produce an unexpected result
+\item
+  crash
+\item
+  appear to work
+\item
+  behave differently on another compiler/system
+\item
+  do something else entirely
+\end{itemize}
+
+\textbf{There are no guarantees.}
+
+\subsubheading*{Example: Division by zero}
+\label{example-division-by-zero}
+\hypertarget{example-division-by-zero}{}
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main() {
+    printf("%d\n", 5);
+    printf("%d\n", 1 / 0);
+    return 0;
+}
+\end{lstlisting}
+
+The expression:
+
+\begin{lstlisting}[style=cscode]
+1 / 0
+\end{lstlisting}
+
+has \textbf{undefined behaviour}.
+
+Do \textbf{not} assume that it will always produce a particular result.
+
+\subsubheading*{Integer Overflow}
+\label{integer-overflow}
+\hypertarget{integer-overflow}{}
+
+Overflow occurs when a value exceeds the range that its type can represent.
+
+Assuming \texttt{int} is 4 bytes (32 bits):
+
+\textbf{Unsigned integer overflow is well-defined:}
+
+\begin{lstlisting}[style=cscode]
+unsigned int c = 4294967295;
+c = c + 1;
+\end{lstlisting}
+
+The value \textbf{wraps around}:
+
+\begin{lstlisting}[style=plaincode]
+c = 0
+\end{lstlisting}
+
+\textbf{Signed integer overflow is undefined behaviour:}
+
+\begin{lstlisting}[style=cscode]
+int c = 2147483647;
+c = c + 1;  // Undefined Behaviour!
+\end{lstlisting}
+
+So:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Situation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Behaviour
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Unsigned integer overflow & Well-defined; wraps around \\
+Signed integer overflow & \textbf{Undefined Behaviour} \\
+\end{longtable}
+
+\subsubheading*{Key takeaway}
+\label{key-takeaway}
+\hypertarget{key-takeaway}{}
+
+\textbf{UB = the C Standard gives no requirements for what happens.}
+
+Therefore, \textbf{never rely on what seems to happen when testing UB}. A program may behave differently depending on the compiler, optimisation, machine, or other circumstances.
+
+\begin{quote}
+\textbf{UB is an unavoidable part of C}, so learning to recognise and avoid it is important.
+\end{quote}
+
+\textbf{Compiler Warnings}
+
+The compiler can warn you about \textbf{some} problematic cases.
+
+\begin{lstlisting}[style=plaincode]
+Listen to what your compiler says!
+\end{lstlisting}
+
+Compiler warnings are useful for catching potential problems before they become bugs.
+
+\subheading{0.X Lab}
+\label{0x-lab}
+\hypertarget{0x-lab}{}
+
+\textbf{Goal:} Practice working with variables, format specifiers, and the ternary operator.
+
+\textbf{Exercise 1 --- Temperature conversion}
+
+Write a program that stores a temperature in Celsius as a \texttt{double}, converts it to Fahrenheit, and prints both values to 2 decimal places.
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    double celsius = 30.0;
+    double fahrenheit = celsius * 9.0 / 5.0 + 32;
+    printf("%.2f C = %.2f F\n", celsius, fahrenheit);
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exercise 2 --- Even or odd, with a ternary}
+
+Read an \texttt{int} and use the ternary operator (not \texttt{if}) to print whether it is even or odd.
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    int n = 7;
+    printf("%s\n", (n % 2 == 0) ? "even" : "odd");
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Things to watch out for}
+
+\begin{itemize}
+\tightlist
+\item
+  Integer division silently truncates --- cast to \texttt{double} if you need a fractional result (see \protect\hyperlink{037-division-with-double}{0.3.7}).
+\item
+  \texttt{\%} only works on integer types.
+\item
+  Always double check your format specifier matches the variable's type (e.g.~\texttt{\%f} for \texttt{double}/\texttt{float}, \texttt{\%d} for \texttt{int}) --- mismatching them is undefined behaviour (see \protect\hyperlink{05-undefined-behaviour}{0.5}).
+\end{itemize}
+
+\heading{L1: Conditionals and Functions}
+\label{l1-conditionals-and-functions}
+\hypertarget{l1-conditionals-and-functions}{}
+
+\subheading{1.1 Abstraction I: Functions}
+\label{11-abstraction-i-functions}
+\hypertarget{11-abstraction-i-functions}{}
+
+\begin{description}
+\tightlist
+\item[\emph{Function}]
+is a named, reusable block of code that performs a specific task. It takes zero or more \textbf{arguments} as input, and can \textbf{return} a single value as output.
+\end{description}
+
+\textbf{Why functions?}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Abstraction} --- the caller only needs to know \emph{what} a function does (its interface), not \emph{how} it does it (its implementation).
+\item
+  \textbf{Reuse} --- write the logic once, call it many times.
+\item
+  \textbf{Readability} --- breaking a program into small, well-named functions makes it easier to follow.
+\end{itemize}
+
+\textbf{Anatomy of a function}
+
+\begin{lstlisting}[style=cscode]
+int add(int a, int b) {
+    int sum = a + b;
+    return sum;
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{int} (leftmost) is the \textbf{return type} --- the type of value the function sends back.
+\item
+  \texttt{add} is the function's \textbf{name}.
+\item
+  \texttt{(int\ a,\ int\ b)} are the \textbf{parameters} --- the inputs the function expects, along with their types.
+\item
+  \texttt{return\ sum;} sends the value of \texttt{sum} back to whoever called the function. A function with return type \texttt{void} does not return a value, and can use a bare \texttt{return;} (or nothing) to end early.
+\end{itemize}
+
+\textbf{Calling a function}
+
+\begin{lstlisting}[style=cscode]
+int result = add(3, 4); // result is 7
+\end{lstlisting}
+
+\textbf{Function prototypes}
+
+If a function is defined \emph{after} \texttt{main}, or in another file, the compiler needs to know its signature before it's used. A \textbf{prototype} declares the signature without the body:
+
+\begin{lstlisting}[style=cscode]
+int add(int a, int b); // prototype
+
+int main(void) {
+    int result = add(3, 4);
+    return 0;
+}
+
+int add(int a, int b) { // definition
+    return a + b;
+}
+\end{lstlisting}
+
+\subheading{1.2 Conditional Statements}
+\label{12-conditional-statements}
+\hypertarget{12-conditional-statements}{}
+
+\subsubheading{1.2.1 If/else constructs}
+\label{121-ifelse-constructs}
+\hypertarget{121-ifelse-constructs}{}
+
+The \texttt{if} statement runs a block of code only when a condition is true.
+
+\begin{lstlisting}[style=cscode]
+if (condition) {
+    // runs when condition is true
+}
+\end{lstlisting}
+
+Add an \texttt{else} to handle the opposite case:
+
+\begin{lstlisting}[style=cscode]
+if (condition) {
+    // condition is true
+} else {
+    // condition is false
+}
+\end{lstlisting}
+
+Chain multiple conditions with \texttt{else\ if}:
+
+\begin{lstlisting}[style=cscode]
+if (score >= 90) {
+    printf("A\n");
+} else if (score >= 75) {
+    printf("B\n");
+} else if (score >= 50) {
+    printf("C\n");
+} else {
+    printf("F\n");
+}
+\end{lstlisting}
+
+Only the \textbf{first} branch whose condition is true runs; the rest are skipped.
+
+\textbf{Always use braces}
+
+As seen in the L2 lab below, omitting \texttt{\{\ \}} means only the \emph{single statement} immediately after the \texttt{if}/\texttt{else} belongs to it --- everything after that runs unconditionally regardless of the condition. Always wrap the body in \texttt{\{\ \}}, even for one-line bodies, to avoid this class of bug.
+
+\subsubheading{1.2.2 Comparison and logical operators}
+\label{122-comparison-and-logical-operators}
+\hypertarget{122-comparison-and-logical-operators}{}
+
+Recall the comparison operators (\texttt{==}, \texttt{!=}, \texttt{\textless{}}, \texttt{\textgreater{}}, \texttt{\textless{}=}, \texttt{\textgreater{}=}) and logical operators (\texttt{\&\&}, \texttt{\textbar{}\textbar{}}, \texttt{!}) from \protect\hyperlink{03-arithmetic-and-assignment-operators}{0.3}. Inside an \texttt{if}, these are combined to build more complex conditions.
+
+\textbf{Truth tables}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\texttt{a}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\texttt{b}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\texttt{a\ \&\&\ b}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\texttt{a\ \textbar{}\textbar{}\ b}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 1 \\
+1 & 0 & 0 & 1 \\
+1 & 1 & 1 & 1 \\
+\end{longtable}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\texttt{a}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\texttt{!a}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 1 \\
+1 & 0 \\
+\end{longtable}
+
+\textbf{Short-circuit evaluation}
+
+\texttt{\&\&} and \texttt{\textbar{}\textbar{}} evaluate left to right and stop early once the result is already decided:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{a\ \&\&\ b} --- if \texttt{a} is false, \texttt{b} is \textbf{never evaluated} (the whole expression is already false).
+\item
+  \texttt{a\ \textbar{}\textbar{}\ b} --- if \texttt{a} is true, \texttt{b} is \textbf{never evaluated} (the whole expression is already true).
+\end{itemize}
+
+This matters when the right-hand side has side effects (e.g.~a function call that prints something), as seen in the \texttt{foo()\ \&\&\ bar()} example in the L2 lab below.
+
+\subsubheading{1.2.3 Boolean operators}
+\label{123-boolean-operators}
+\hypertarget{123-boolean-operators}{}
+
+C did not have a built-in boolean type until relatively recently. \texttt{\textless{}stdbool.h\textgreater{}} provides one:
+
+\begin{lstlisting}[style=cscode]
+#include <stdbool.h>
+
+bool is_valid = true;
+\end{lstlisting}
+
+Under the hood:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{bool} is really a small integer type; \texttt{true} is \texttt{1} and \texttt{false} is \texttt{0}.
+\item
+  Any non-zero value is treated as ``true'' in a condition; only \texttt{0} is ``false''.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int x = 5;
+if (x) {        // true, since x != 0
+    printf("x is truthy\n");
+}
+\end{lstlisting}
+
+\textbf{Returning a \texttt{bool} from a function}
+
+\begin{lstlisting}[style=cscode]
+#include <stdbool.h>
+
+bool is_even(int n) {
+    return n % 2 == 0;
+}
+\end{lstlisting}
+
+This is the pattern used by \texttt{foo()} and \texttt{bar()} in the L2 lab below --- functions that return \texttt{bool} and are combined with \texttt{\&\&}/\texttt{\textbar{}\textbar{}} inside an \texttt{if}.
+
+\subheading{1.X Lab}
+\label{1x-lab}
+\hypertarget{1x-lab}{}
+
+\textbf{Goal:} Practice writing your own functions that use conditionals.
+
+\textbf{Exercise --- Grade classifier}
+
+Write a function \texttt{char\ grade(int\ score)} that returns \texttt{\textquotesingle{}A\textquotesingle{}}, \texttt{\textquotesingle{}B\textquotesingle{}}, \texttt{\textquotesingle{}C\textquotesingle{}}, or \texttt{\textquotesingle{}F\textquotesingle{}} based on the boundaries used in \protect\hyperlink{121-ifelse-constructs}{1.2.1}, then call it from \texttt{main} and print the result.
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+char grade(int score) {
+    if (score >= 90) {
+        return 'A';
+    } else if (score >= 75) {
+        return 'B';
+    } else if (score >= 50) {
+        return 'C';
+    } else {
+        return 'F';
+    }
+}
+
+int main(void) {
+    int score = 82;
+    printf("Grade: %c\n", grade(score));
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Stretch goal}
+
+Write \texttt{bool\ is\_leap\_year(int\ year)} using the rule: divisible by 4, except centuries, unless also divisible by 400. Combine \texttt{\&\&}, \texttt{\textbar{}\textbar{}}, and \texttt{!} from \protect\hyperlink{122-comparison-and-logical-operators}{1.2.2}.
+
+\heading{L2: Abstractions, Structs, and the Stack}
+\label{l2-abstractions-structs-and-the-stack}
+\hypertarget{l2-abstractions-structs-and-the-stack}{}
+
+\subheading{2.1 Abstraction II: Functions}
+\label{21-abstraction-ii-functions}
+\hypertarget{21-abstraction-ii-functions}{}
+
+\subsubheading{2.1.1 Abstraction of Behavior: Functions}
+\label{211-abstraction-of-behavior-functions}
+\hypertarget{211-abstraction-of-behavior-functions}{}
+
+Section \protect\hyperlink{11-abstraction-i-functions}{1.1} introduced functions as reusable blocks of code. Here we look at \emph{why} wrapping behaviour in a function is a form of \textbf{abstraction}.
+
+When we call a function, we only need to know:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Its \textbf{name}
+\item
+  Its \textbf{parameters} (types and meaning)
+\item
+  Its \textbf{return type}
+\end{enumerate}
+
+We don't need to know \emph{how} it's implemented internally --- that's hidden inside the function body. This is exactly what happens with \texttt{read\_point()} and \texttt{print\_movement()} in the lab below: \texttt{main} doesn't need to know how a point is read or how movement is computed, only that these functions exist and what they do.
+
+\textbf{Pass-by-value}
+
+In C, arguments are passed \textbf{by value} --- the function receives a \emph{copy} of the argument. Modifying a parameter inside a function does not affect the caller's variable.
+
+\begin{lstlisting}[style=cscode]
+void increment(int x) {
+    x = x + 1; // only changes the local copy
+}
+
+int main(void) {
+    int n = 5;
+    increment(n);
+    printf("%d\n", n); // still 5
+}
+\end{lstlisting}
+
+\subsubheading{2.1.2 Abstraction of Data: Structs}
+\label{212-abstraction-of-data-structs}
+\hypertarget{212-abstraction-of-data-structs}{}
+
+Just as functions abstract \emph{behaviour}, \textbf{structs} abstract \emph{data} --- they let us group related variables into a single named type.
+
+\begin{lstlisting}[style=cscode]
+typedef struct {
+    int x;
+    int y;
+} Point;
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{struct\ \{\ ...\ \}} defines a new structure with the listed fields (\textbf{members}).
+\item
+  \texttt{typedef\ ...\ Point;} gives the struct the alias \texttt{Point}, so we can write \texttt{Point\ p;} instead of \texttt{struct\ \{\ ...\ \}\ p;} every time.
+\end{itemize}
+
+\textbf{Creating and accessing a struct}
+
+\begin{lstlisting}[style=cscode]
+Point p;
+p.x = 3;
+p.y = 4;
+printf("(%d, %d)\n", p.x, p.y); // (3, 4)
+\end{lstlisting}
+
+The \texttt{.} (dot) operator accesses a member of a struct.
+
+\textbf{Why this is abstraction}
+
+Without a struct, a point would be two separate, unrelated \texttt{int} variables (\texttt{px}, \texttt{py}), and a function relating two points would need four separate parameters. With \texttt{Point}, related data travels together as one value --- as seen in the lab below, where \texttt{print\_movement(Point\ start,\ Point\ end)} takes just two arguments instead of four.
+
+\subheading{2.2 The Stack and Block Scoping}
+\label{22-the-stack-and-block-scoping}
+\hypertarget{22-the-stack-and-block-scoping}{}
+
+\subsubheading{2.2.1 Stack Frames}
+\label{221-stack-frames}
+\hypertarget{221-stack-frames}{}
+
+Every time a function is called, the program sets aside a small block of memory called a \textbf{stack frame} to hold that call's local variables, parameters, and return address.
+
+\begin{itemize}
+\tightlist
+\item
+  When a function is \textbf{called}, a new frame is \textbf{pushed} onto the \textbf{call stack}.
+\item
+  When the function \textbf{returns}, its frame is \textbf{popped} off the stack, and its memory is reclaimed.
+\item
+  Each call gets its \textbf{own} frame --- calling the same function twice (e.g.~\texttt{read\_point()} for \texttt{p} then for \texttt{q} in the lab below) creates two separate frames, each with its own copy of \texttt{pt}.
+\end{itemize}
+
+\begin{lstlisting}[style=plaincode]
+call main()
+  -> call read_point()    [frame for read_point pushed]
+  <- return                [frame for read_point popped]
+  -> call read_point()    [a *new* frame pushed]
+  <- return                [popped again]
+  -> call print_movement() [frame pushed]
+  <- return                [popped]
+\end{lstlisting}
+
+This is also why a function cannot ``see'' another function's local variables --- they live in different frames.
+
+\subsubheading{2.2.2 Local variables}
+\label{222-local-variables}
+\hypertarget{222-local-variables}{}
+
+A \textbf{local variable} is declared inside a function or block, and only exists --- is only \emph{in scope} --- within that block.
+
+\begin{lstlisting}[style=cscode]
+void foo(void) {
+    int a = 1; // local to foo
+}
+
+void bar(void) {
+    int a = 2; // a different `a`, local to bar
+}
+\end{lstlisting}
+
+\texttt{foo}'s \texttt{a} and \texttt{bar}'s \texttt{a} are unrelated; each lives in its own stack frame.
+
+\textbf{Block scoping}
+
+Any \texttt{\{\ \}} introduces a new scope, not just function bodies --- including \texttt{if}, \texttt{else}, and loop bodies:
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    int x = 10;
+    if (x > 5) {
+        int y = 20;     // y only exists inside this block
+        printf("%d\n", y);
+    }
+    // y is not visible here — out of scope
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Lifetime vs.~scope}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Scope} --- where in the code a variable's name is visible.
+\item
+  \textbf{Lifetime} --- how long the variable's memory actually exists (tied to its stack frame, from when the block is entered to when it's exited).
+\end{itemize}
+
+\subheading{2.X Lab}
+\label{2x-lab}
+\hypertarget{2x-lab}{}
+
+\textbf{More If-Else, Abstraction, Structs}
+
+Part 1a:
+
+Does the code below compile? What is its output?
+
+\begin{lstlisting}[style=cscode]
+#include <stdbool.h>
+#include <stdio.h>
+ 
+bool foo(){
+	printf("foo called returning true\n");
+	return true;
+}
+ 
+bool bar(){
+	printf("bar called returning false\n");
+	return false;
+}
+ 
+int main(){
+	if(foo() && bar()){
+		printf("line A reached\n");
+	}
+ 
+	printf("BOOP\n");
+ 
+	if(foo() || bar()){
+		printf("line B reached\n");
+	}
+}
+\end{lstlisting}
+
+Output: \textbf{Only one line output}
+
+\begin{itemize}
+\tightlist
+\item
+  If you omit the curly braces \texttt{\{\ \ \ \ \}} in your if statement, only the line \textbf{below} the \texttt{if} statement is used as its output.
+\item
+\end{itemize}
+
+Consider the following code:
+
+\begin{lstlisting}[style=cscode]
+#include "input.h"
+#include <stdbool.h>
+#include <stdio.h>
+
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+int main() {
+    Point p;
+    p.x = read_int();
+    p.y = read_int();
+
+    Point q;
+    q.x = read_int();
+    q.y = read_int();
+
+    int dx = q.x - p.x;
+    int dy = q.y - p.y;
+
+    bool moving_right = dx > 0;
+    bool moving_up = dy > 0;
+    bool on_same_x = dx == 0;
+    bool on_same_y = dy == 0;
+
+    if (on_same_x && on_same_y) {
+        printf("same point\n");
+    } else if (on_same_x) {
+        printf("vertical movement\n");
+    } else if (on_same_y) {
+        printf("horizontal movement\n");
+    } else if (moving_right && moving_up) {
+        printf("northeast\n");
+    } else if (!moving_right && moving_up) {
+        printf("northwest\n");
+    } else if (moving_right && !moving_up) {
+        printf("southeast\n");
+    } else {
+        printf("southwest\n");
+    }
+    return 0;
+}
+\end{lstlisting}
+
+We can simplify this to:
+
+\begin{lstlisting}[style=cscode]
+#include "input.h"
+#include <stdbool.h>
+#include <stdio.h>
+
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+Point read_point() {
+    Point pt;
+    pt.x = read_int();
+    pt.y = read_int();
+    return pt;
+}
+
+void print_movement(Point start, Point end) {
+    int dx = end.x - start.x;
+    int dy = end.y - start.y;
+
+    bool moving_right = dx > 0;
+    bool moving_up = dy > 0;
+    bool on_same_x = dx == 0;
+    bool on_same_y = dy == 0;
+
+    if (on_same_x && on_same_y) {
+        printf("same point\n");
+    } else if (on_same_x) {
+        printf("vertical movement\n");
+    } else if (on_same_y) {
+        printf("horizontal movement\n");
+    } else if (moving_right && moving_up) {
+        printf("northeast\n");
+    } else if (!moving_right && moving_up) {
+        printf("northwest\n");
+    } else if (moving_right && !moving_up) {
+        printf("southeast\n");
+    } else {
+        printf("southwest\n");
+    }
+}
+
+int main() {
+    Point p = read_point();
+    Point q = read_point();
+    print_movement(p, q);
+    return 0;
+}
+\end{lstlisting}
+
+\heading{L3: Fixed Size arrays and Recursion}
+\label{l3-fixed-size-arrays-and-recursion}
+\hypertarget{l3-fixed-size-arrays-and-recursion}{}
+
+\subheading{3.1 Arrays}
+\label{31-arrays}
+\hypertarget{31-arrays}{}
+
+\subsubheading{3.1.1 Array Declaration}
+\label{311-array-declaration}
+\hypertarget{311-array-declaration}{}
+
+Let's say we want to declare an array that stores 5 elements of type \texttt{double} that we want to call ``costs''.
+
+An \textbf{array} is declared as such: \texttt{\textless{}type\textgreater{}\ \textless{}array\ name\textgreater{}{[}\textless{}no.\ of\ elements\textgreater{}{]}}
+
+\begin{lstlisting}[style=cscode]
+double costs[5];
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Important:} Arrays have a fixed type. You cannot add multiple different types to an array unlike Python.
+\end{quote}
+
+Arrays are stored on the stack.
+
+\begin{lstlisting}[style=plaincode]
+main
+
+costs = {?,?,?,?,?}
+\end{lstlisting}
+
+An array will have all of its elements stored contiguously to each other in memory. * This has implications for both performance and security in the far future.
+
+\begin{lstlisting}[style=cscode]
+double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44};
+        // initializes the array with 5 values
+\end{lstlisting}
+
+It is stored in the stack as such:
+
+\begin{lstlisting}[style=plaincode]
+stack:
+|8.88|10.22|9.88|22.22|44.44|
+\end{lstlisting}
+
+\subsubheading{3.1.2 Initializing elements}
+\label{312-initializing-elements}
+\hypertarget{312-initializing-elements}{}
+
+However, what if we initialize only 3 elements out of 5?
+
+\begin{lstlisting}[style=cscode]
+double costs[5]= {8.88,10.22,9.88};
+// the remaining elements will be initialized to 0.0 by default.
+
+
+double zeroarray[5]={0};
+//^^this is a very good way to initialize an entire array to 0!
+\end{lstlisting}
+
+What if we initialize more than 5 elements?
+
+\begin{lstlisting}[style=cscode]
+double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44, 1.0};
+\end{lstlisting}
+
+If we have more values than the specified size, what happens is up to the compiler (technically not undefined behavior) {[}we don't recommend doing this, there's no good reason to at this stage{]}
+
+What if we initialize it over 2 lines?
+
+\begin{lstlisting}[style=cscode]
+double costs[5];
+costs = {8.88, 10.22, 9.88, 22.22, 44.44, 1.0};
+\end{lstlisting}
+
+\begin{quote}
+This does \textbf{NOT} work and throws a \texttt{compile\ error}. Unlike scalar variables, arrays cannot be assigned new values as a whole.
+\end{quote}
+
+\subsubheading{3.1.3 Accessing an Array (writing)}
+\label{313-accessing-an-array-writing}
+\hypertarget{313-accessing-an-array-writing}{}
+
+We use the index.
+
+\begin{lstlisting}[style=cscode]
+double costs[5];
+
+costs[0] = 8.88;
+// | 8.88 | ? | ? | ? | ? |
+
+costs[4] = 44.44;
+// | 8.88 | ? | ? | ? | 44.44 |
+\end{lstlisting}
+
+\subsubheading{3.1.4 Copying Semantics}
+\label{314-copying-semantics}
+\hypertarget{314-copying-semantics}{}
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44};
+    double costs_2[] = costs; // error!
+}
+\end{lstlisting}
+
+\begin{quote}
+This does \textbf{NOT} work and will throw a \emph{compile error}! \texttt{error:\ array\ initializer\ must\ be\ an\ initializer\ list.}
+\end{quote}
+
+Arrays (unlike numerical types and structs) as a whole are \textbf{not copyable} via assignment operators.
+
+\subsubheading{3.1.5 Arrays as arguments to functions}
+\label{315-arrays-as-arguments-to-functions}
+\hypertarget{315-arrays-as-arguments-to-functions}{}
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+#include <stddef.h>
+
+void print_doublearr_index(double arr[], size_t index) {
+    printf("%f\n", arr[index]);
+}
+
+int main(void) {
+    double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44};
+    print_doublearr_index(costs, 3);
+}
+\end{lstlisting}
+
+\texttt{size\_t}: unsigned type (typically \texttt{unsigned\ long})
+
+\begin{itemize}
+\tightlist
+\item
+  Guaranteed to be large enough to index any array
+\item
+  Intent is clear: use by default for array indices, unless we need negative values
+\item
+  \texttt{size\_t} is defined in \texttt{\textless{}stddef.h\textgreater{}}
+\end{itemize}
+
+Array indices can technically be any integral type (\texttt{char}, \texttt{int}, \texttt{long} \ldots)
+
+\subsubheading{3.1.6 Length of arrays}
+\label{316-length-of-arrays}
+\hypertarget{316-length-of-arrays}{}
+
+\begin{lstlisting}[style=cscode]
+void print_last_element (double arr[]) {
+    printf("%f\n", arr[?])
+}
+
+int main(void) {
+    double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44};
+    print_last_element(costs);
+}
+\end{lstlisting}
+
+In \textbf{C}, we do \textbf{NOT} have \texttt{length/len} operators to measure the length of an array.
+
+Instead, we use \texttt{size\_t} for now:
+
+\begin{lstlisting}[style=cscode]
+void print_last_element(double arr[], size_t length) {
+    printf("%f\n", arr[length - 1]);
+}
+
+int main(void) {
+    double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44};
+    print_last_element(costs, 5);
+}
+\end{lstlisting}
+
+\subsubheading*{Setting Values inside Functions}
+\label{setting-values-inside-functions}
+\hypertarget{setting-values-inside-functions}{}
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44};
+    set_doublearr_index(costs, 3, 5.5);
+    printf("%f\n", costs[3]);
+}
+void set_doublearr_index(double arr[], size_t index, double val) {
+    arr[index] = val;
+}
+    //output is... 5.5.
+\end{lstlisting}
+
+This sets the index 3 (the 4th) element of costs to 5.5. But how is that possible? This is because arrays are pointers.
+
+\subsubheading*{Returning from functions}
+\label{returning-from-functions}
+\hypertarget{returning-from-functions}{}
+
+For now, do not return arrays declared within functions.
+
+\begin{lstlisting}[style=cscode]
+// DONT DO THIS
+??? foo() {
+    double costs[5] ={8.88, 10.22, 9.88, 22.22, 44.44, 1.0};
+    return costs;
+} // will return UB
+\end{lstlisting}
+
+\subheading{3.2 Arrays and Structs}
+\label{32-arrays-and-structs}
+\hypertarget{32-arrays-and-structs}{}
+
+\subsubheading*{Zeroing out}
+\label{zeroing-out}
+\hypertarget{zeroing-out}{}
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+typedef struct Position {
+    int x;
+    int y;
+} Position;
+
+int main(void){
+    Position positions[2] = {0};
+    printf("%d %d\n", positions[0].x, positions[0].y);
+} // This will zero out all members of all structs.
+\end{lstlisting}
+
+\subsubheading*{UB}
+\label{ub}
+\hypertarget{ub}{}
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    double costs[1] = {8.88};
+    printf("%f\n", costs[1]);
+}
+
+// UB [1] 
+
+
+int main(void) {
+    double costs[1];
+    printf("%f\n", costs[-1]);
+}
+
+// UB [2]
+
+??? foo() {
+    double costs[1] = {8.88};
+    return costs;
+}
+
+// UB [3]
+
+int main() {
+    double costs[1];
+    printf("%f\n", costs[0]);
+}
+\end{lstlisting}
+
+\subsubheading*{Variable-length arrays}
+\label{variable-length-arrays}
+\hypertarget{variable-length-arrays}{}
+
+Can we declare the size of an array as a variable? Yes.
+
+\begin{lstlisting}[style=cscode]
+double costs[var];
+\end{lstlisting}
+
+\begin{quote}
+However, there are much better ways to do this (discussed later). We do not allow VLAs because of underlying issues. As a matter of fact, VLA was removed from Linux operating system.
+\end{quote}
+
+\subheading{3.3 Multidimensional Arrays}
+\label{33-multidimensional-arrays}
+\hypertarget{33-multidimensional-arrays}{}
+
+\subsubheading{3.3.1 Array of arrays}
+\label{331-array-of-arrays}
+\hypertarget{331-array-of-arrays}{}
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    int a[2][3] = {{0,1,2},{3,4,5}};
+    printf("%d\n", a[1][0]);
+}
+\end{lstlisting}
+
+Then a is stored as: \[a =
+\left[\begin{matrix}
+    0 & 1 & 2 \\ 3 & 4 & 5
+\end{matrix}\right]
+\]
+
+We are storing an array of arrays.
+
+Example: tic-tac-toe
+
+\begin{lstlisting}[style=cscode]
+int grid[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+\end{lstlisting}
+
+\[\text{grid} =
+\left[\begin{matrix}
+    1 & 2 &3 \\ 4 & 5 & 6 \\ 7&8&9
+\end{matrix}\right]\]
+
+Arrays can have more dimensions!
+
+\begin{quote}
+Only the first dimension size can be omitted.
+\end{quote}
+
+\subheading{3.4 Recursion}
+\label{34-recursion}
+\hypertarget{34-recursion}{}
+
+\subsubheading{3.4.1 Why Recursion}
+\label{341-why-recursion}
+\hypertarget{341-why-recursion}{}
+
+You \textbf{cannot call yourself a programmer if you don't know how to recurse}. You will be locking yourself away from future concepts if you don't learn this. This includes:
+
+\begin{itemize}
+\tightlist
+\item
+  Binary search trees
+\item
+  Fast/Efficient sorting algorithms
+\item
+  A lot of efficient algorithms. The fast Fourier transform (FFT) is an example
+\end{itemize}
+
+\subsubheading{3.4.2 Features of recursion}
+\label{342-features-of-recursion}
+\hypertarget{342-features-of-recursion}{}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Base Case:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The simplest possible case that we have to solve manually.
+  \end{itemize}
+\item
+  \textbf{Recursive Case:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    In this case we usually have to ``steer'' the general case into the smaller case somehow.
+  \item
+    We will rely on Cheems to solve the smaller version of the problem for us.
+  \item
+    We will use whatever Cheems gives us + a little bit more work to solve the problems in general.
+  \end{itemize}
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+<return_type> foo(<param(s) here>){
+    if(<base case>){
+    return; // or return value;
+}
+
+// handle recursive case here
+// any computation before recursive call(s)
+
+foo(<with smaller case>);
+    // any computation after recursive call(s)
+}
+\end{lstlisting}
+
+\subsubheading{3.4.3 Example: Printing an array in reverse}
+\label{343-example-printing-an-array-in-reverse}
+\hypertarget{343-example-printing-an-array-in-reverse}{}
+
+Logic:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The base case is when the length of the array is 0, so we do nothing.
+\item
+  We have an entire array of \(n\) elements.
+\item
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  The entire array of \(n\) elements
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The last element will be our base case.
+  \item
+    Cheems will handle the rest with: \texttt{print\_arr\_reverse(arr,\ len-1)}
+  \end{itemize}
+\item
+  We should do something only with the last element. We print the last element before Cheems.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+void print_arr_reverse(int arr[], size_t len){
+    if (len == 0) {
+        return; // array has nothing, we do nothing.
+    }
+
+    printf("%d\n", arr[len-1]);
+
+    print_arr_reverse(arr, len-1); // cheems!
+}
+\end{lstlisting}
+
+\subsubheading*{Example: Reverse an array}
+\label{example-reverse-an-array}
+\hypertarget{example-reverse-an-array}{}
+
+Input: An array of length \texttt{len}. Output: Reverse the elements of \texttt{arr}.
+
+We need a helper function here: The function will need:
+
+\begin{itemize}
+\tightlist
+\item
+  take in an array
+\item
+  Swap the first and last elements
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+void reverse_arr_helper(int arr[], size_t start, size_t end) {
+    if (start >= end) {
+        return;
+    }
+    reverse_arr_helper(arr, start+1, end-1);
+    int temp = arr[start];
+    arr[start] = arr[end];
+    arr[end] = temp;
+}
+
+void reverse_arr(int arr[], size_t len) {
+    if (len==0) {return;}
+    reverse_arr_helper(arr,0,len-1);
+}
+\end{lstlisting}
+
+\subsubheading*{Example: Sort an array}
+\label{example-sort-an-array}
+\hypertarget{example-sort-an-array}{}
+
+Let's say Cheems has already sorted the first \(n-1\) elements for us. What should we do with the last element? \textgreater{} We figure out where to put it.
+
+\begin{lstlisting}[style=cscode]
+void shift_left(int arr[], size_t len, size_t count) {
+    ...
+}
+
+void count_larger_than(int arr[], size_t len, size_t val) {
+    ...
+}
+
+void sort_arr(int arr[], size_t len) {
+    if(len==0){
+        return;
+    }
+    size_t count = count_larger_than(arr, len-1, arr[len-1]);
+    shift_left(arr, len, count);
+}
+
+\end{lstlisting}
+
+\subheading{3.X Lab}
+\label{3x-lab}
+\hypertarget{3x-lab}{}
+
+\begin{itemize}
+\item
+  When declaring \texttt{arrays{[}{]}{[}{]}}, you need to at least declare the no. of columns \texttt{{[}{]}{[}cols{]}}.
+\item
+  \texttt{void} will not affect the variable inside \texttt{main} without \texttt{return}.
+\item
+  However, \texttt{void} calls on the array directly and can redefine the array elements.
+\end{itemize}
+
+\heading{L4: Loops}
+\label{l4-loops}
+\hypertarget{l4-loops}{}
+
+\subheading{4.1 \texttt{while} Loops and \texttt{for} Loops}
+\label{41-while-loops-and-for-loops}
+\hypertarget{41-while-loops-and-for-loops}{}
+
+\subsubheading*{Why loops?}
+\label{why-loops}
+\hypertarget{why-loops}{}
+
+Some problems can be solved using recursion, but recursion can use a lot of stack space. Consider printing every element of an array:
+
+\begin{lstlisting}[style=cscode]
+void print_arr_from(double arr[], size_t length, size_t i) {
+    if (i == length) {
+        return;
+    }
+    printf("%f\n", arr[i]);
+    print_arr_from(arr, length, i + 1);
+}
+
+void print_arr(double arr[], size_t length) {
+    print_arr_from(arr, length, 0);
+}
+\end{lstlisting}
+
+Each recursive call uses a stack frame and waits for the next call to finish. Printing an array of length \(n\) creates roughly \(n\) nested calls, so a sufficiently large array can exhaust the stack and cause a \textbf{stack overflow}. C does not guarantee tail-call optimization to avoid this.
+
+Loops let us repeat code without making a new function call for every repetition.
+
+\subsubheading*{\texttt{while} loops}
+\label{while-loops}
+\hypertarget{while-loops}{}
+
+\begin{lstlisting}[style=cscode]
+while (expression) {
+    // loop body
+}
+\end{lstlisting}
+
+The expression is checked first. If it is true, the loop body runs. At the end of the body, execution returns to the condition and checks it again. If the expression is false, the loop body is skipped or the loop ends.
+
+For example, print every element of an array:
+
+\begin{lstlisting}[style=cscode]
+void print_arr(double arr[], size_t length) {
+    size_t i = 0;
+
+    while (i < length) {
+        printf("%f\n", arr[i]);
+        i += 1;
+    }
+}
+\end{lstlisting}
+
+Here, \texttt{i} is the \textbf{index} (or iterator). It starts at zero, increases after each iteration, and the loop ends when \texttt{i\ \textless{}\ length} becomes false.
+
+If the loop body never changes anything that can make the condition false, the loop may run forever. For example, leaving out \texttt{i\ +=\ 1} would repeatedly print \texttt{arr{[}0{]}}.
+
+Array indices go from \texttt{0} to \texttt{length\ -\ 1}. Using \texttt{i\ \textless{}=\ length} would eventually access \texttt{arr{[}length{]}}, which is outside the array and causes undefined behavior.
+
+For reverse iteration with \texttt{size\_t}, avoid a condition such as \texttt{i\ \textgreater{}=\ 0}: \texttt{size\_t} is unsigned, so that condition is always true, even after the value wraps around. One way to print in reverse is:
+
+\begin{lstlisting}[style=cscode]
+void print_arr_reverse(double arr[], size_t length) {
+    for (size_t i = 0; i < length; i += 1) {
+        printf("%f\n", arr[(length - 1) - i]);
+    }
+}
+\end{lstlisting}
+
+\subsubheading*{\texttt{for} loops}
+\label{for-loops}
+\hypertarget{for-loops}{}
+
+A \texttt{for} loop puts initialization, condition, and iteration in one place:
+
+\begin{lstlisting}[style=cscode]
+for (expression1; expression2; expression3) {
+    // loop body
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{expression1} runs once before the loop starts. It often declares and initializes an index.
+\item
+  \texttt{expression2} is the condition. The body runs only when it is true.
+\item
+  \texttt{expression3} runs after each execution of the body. It often updates the index.
+\end{itemize}
+
+The \texttt{while} and \texttt{for} versions below do the same thing:
+
+\begin{lstlisting}[style=cscode]
+size_t i = 0;
+while (i < length) {
+    printf("%f\n", arr[i]);
+    i += 1;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=cscode]
+for (size_t i = 0; i < length; i += 1) {
+    printf("%f\n", arr[i]);
+}
+\end{lstlisting}
+
+Variables declared in a \texttt{for} loop's initialization are scoped to the loop, so \texttt{i} cannot be used after the loop. A variable declared before a \texttt{while} loop remains accessible after it.
+
+\subheading{4.2 Loop control with \texttt{break}, \texttt{continue}, \texttt{return}}
+\label{42-loop-control-with-break-continue-return}
+\hypertarget{42-loop-control-with-break-continue-return}{}
+
+\subsubheading*{\texttt{break}}
+\label{break}
+\hypertarget{break}{}
+
+\texttt{break} immediately exits the \textbf{innermost loop} containing it. Execution continues after that loop.
+
+\begin{lstlisting}[style=cscode]
+for (size_t i = 0; i < 5; ++i) {
+    printf("%zu\n", i);
+    if (i == 1) {
+        break;
+    }
+}
+printf("Loop ended!\n");
+\end{lstlisting}
+
+This prints \texttt{0}, \texttt{1}, and \texttt{Loop\ ended!}. In nested loops, \texttt{break} exits only the inner loop.
+
+\subsubheading*{\texttt{continue}}
+\label{continue}
+\hypertarget{continue}{}
+
+\texttt{continue} skips the rest of the current loop body and moves to the next iteration. In a \texttt{for} loop, the iteration expression runs before the condition is checked again.
+
+\begin{lstlisting}[style=cscode]
+for (size_t i = 0; i < 5; ++i) {
+    if (i == 1) {
+        continue;
+    }
+    printf("%zu\n", i);
+}
+\end{lstlisting}
+
+This prints \texttt{0}, \texttt{2}, \texttt{3}, and \texttt{4}.
+
+\subsubheading*{\texttt{return}}
+\label{return}
+\hypertarget{return}{}
+
+\texttt{return} immediately exits the \textbf{entire function}, including any loops inside it. For example, this function returns as soon as it finds a \texttt{1}:
+
+\begin{lstlisting}[style=cscode]
+bool has_one_inside_array(int arr[], size_t length) {
+    for (size_t i = 0; i < length; ++i) {
+        if (arr[i] == 1) {
+            return true;
+        }
+    }
+    return false;
+}
+\end{lstlisting}
+
+\subheading{4.3 Array recursion}
+\label{43-array-recursion}
+\hypertarget{43-array-recursion}{}
+
+Array elements are commonly processed by iterating over their indices:
+
+\begin{lstlisting}[style=cscode]
+for (size_t i = 0; i < length; ++i) {
+    // process arr[i]
+}
+\end{lstlisting}
+
+This is useful for tasks such as printing every element, initializing an array, and calculating a sum. The index starts at \texttt{0}, and the loop condition \texttt{i\ \textless{}\ length} ensures the last index accessed is \texttt{length\ -\ 1}.
+
+\subheading{4.4 Examples}
+\label{44-examples}
+\hypertarget{44-examples}{}
+
+\subsubheading*{Initialize every array element}
+\label{initialize-every-array-element}
+\hypertarget{initialize-every-array-element}{}
+
+\begin{lstlisting}[style=cscode]
+void init_array(double arr[], size_t length, double val) {
+    for (size_t i = 0; i < length; ++i) {
+        arr[i] = val;
+    }
+}
+\end{lstlisting}
+
+\texttt{++i}, \texttt{i++}, and \texttt{i\ +=\ 1} all increase \texttt{i} by one here.
+
+\subsubheading*{Nested loops: print a triangle}
+\label{nested-loops-print-a-triangle}
+\hypertarget{nested-loops-print-a-triangle}{}
+
+A loop can be placed inside another loop. The inner loop runs to completion during each outer loop iteration.
+
+\begin{lstlisting}[style=cscode]
+void print_triangle(size_t height) {
+    for (size_t i = 0; i < height; ++i) {
+        for (size_t j = 0; j < i + 1; ++j) {
+            printf("X ");
+        }
+        printf("\n");
+    }
+}
+\end{lstlisting}
+
+The outer loop controls the row number. The inner loop prints \texttt{i\ +\ 1} Xs on that row. Each loop's index is scoped to its own \texttt{for} loop.
+
+\subsubheading*{A method for planning loops}
+\label{a-method-for-planning-loops}
+\hypertarget{a-method-for-planning-loops}{}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Decide what condition must be true for the loop to continue.
+\item
+  If the loop needs an iterator, choose its type and initialize it.
+\item
+  Decide how to update the iterator after each iteration.
+\end{enumerate}
+
+\heading{L5: Pointers and Strings}
+
+\subheading{5.1 Pointers}
+
+\subsubheading*{Memory}
+
+Memory has two important properties:
+\begin{itemize}
+    \item \textbf{Address}: the location where data is stored.
+    \item \textbf{Value}: the data stored at that location.
+\end{itemize}
+
+For example:
+\begin{lstlisting}[style=cscode]
+int x = 4;
+int *p = &x;
+\end{lstlisting}
+
+An illustrative memory layout is shown below. Actual addresses,
+object sizes, and placement depend on the implementation.
+
+\begin{longtable}{@{}ll@{}}
+\toprule
+\textbf{Address} & \textbf{Value} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{0x1000} & \texttt{0x4} \\
+\texttt{0x1004} & \texttt{0x1000} \\
+\texttt{0x1008} & \\
+\texttt{0x100C} & \\
+\texttt{0x1010} & \\
+\texttt{0x1014} & \\
+\texttt{0x1018} & \\
+\texttt{0x101C} & \\
+\end{longtable}
+
+\subsubheading*{Pointers}
+
+A pointer variable stores an address.
+
+\begin{lstlisting}[style=cscode]
+int x = 4;
+int *p = &x;
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{int x = 4;} declares an integer named
+          \texttt{x} and initializes it to \(4\).
+    \item \texttt{int *p = \&x;} declares a pointer to
+          \texttt{int}, named \texttt{p}, and initializes it
+          with the \emph{address of} \texttt{x}.
+    \item In this declaration, \texttt{*} indicates a pointer type.
+    \item In an expression, \texttt{\&} is the address-of operator.
+\end{itemize}
+
+\begin{center}
+\IfFileExists{../assets/pointer.png}{%
+    \includegraphics[width=0.35\linewidth]{../assets/pointer.png}%
+}{%
+    \fbox{\strut\texttt{p = \&x}}\quad\(\xrightarrow{\text{points to}}\)\quad\fbox{\strut\texttt{x = 4}}%
+}
+\par\smallskip
+{\small Figure 5.1.1: A pointer storing an object's address.}
+\end{center}
+
+\textbf{Pointer size:}
+A pointer's size is determined by its pointer type and the
+implementation. It does \emph{not} have to equal the size of the
+object it points to. For example, a pointer may occupy \(8\) bytes
+while pointing to a \(4\)-byte \texttt{int}.
+
+\subsubheading*{Why pointers?}
+
+A function can use a pointer to access an object declared elsewhere,
+provided that the object is still alive and the pointer is valid.
+
+Passing a pointer to a struct lets the function access or modify the
+original struct without copying the entire struct. The pointer
+itself is still passed \textbf{by value}.
+
+\subheading{5.2 Address-of (\&) and Dereferencing (*), nullptr,
+pointers to pointers}
+
+\subsubheading{5.2.1 Printing Addresses}
+
+\begin{lstlisting}[style=cscode]
+char x = 'A';
+printf("x is at %p\n", (void *)&x);
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{\%p} prints a pointer value.
+    \item \texttt{\&x} gives the address of \texttt{x}.
+    \item \texttt{\%p} expects a \texttt{void *} argument, so cast
+          an object pointer to \texttt{void *} when printing it.
+\end{itemize}
+
+An object may occupy multiple bytes, but it still has a starting
+address:
+\begin{lstlisting}[style=cscode]
+int y = 1000;
+printf("y is at %p\n", (void *)&y);
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{\&y} has type \texttt{int *} and points to the
+          entire object \texttt{y}.
+    \item Casting to \texttt{char *} is useful for accessing an
+          object's individual bytes; it is not required to print
+          its address.
+    \item The size of \texttt{int} is implementation-dependent.
+\end{itemize}
+
+Addresses are commonly printed in hexadecimal form:
+\begin{itemize}
+    \item Example: \texttt{0x7ffd7f613f2b}.
+    \item Hexadecimal is base \(16\), using the digits
+          \(0,1,\ldots,9,A,B,C,D,E,F\).
+    \item This example corresponds to the decimal number
+          \(140726740533035\).
+    \item The exact format produced by \texttt{\%p} is
+          implementation-defined.
+    \item Addresses are not guaranteed to remain the same across
+          different executions of a program.
+\end{itemize}
+
+\textbf{Takeaway:}
+Use an expression such as \texttt{\&x} to obtain an object's
+address; do not guess its address.
+
+\subsubheading{5.2.2 Address (\&) and Dereferencing (*)}
+
+\begin{lstlisting}[style=cscode]
+int *p = &x;
+int y = *p;
+\end{lstlisting}
+
+In an expression, unary \texttt{*} performs
+\textbf{pointer dereferencing}: it accesses the object pointed to
+by the pointer.
+
+Read \texttt{int y = *p;} as:
+``Initialize the integer \texttt{y} with the value of the object
+pointed to by \texttt{p}.''
+
+\begin{lstlisting}[style=cscode]
+int x = 1;
+int *ptr = &x;
+printf("%d\n", *ptr);
+// 1
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{int *ptr = \&x;} declares a pointer to an integer.
+    \item The unary operator \texttt{\&} obtains an object's address.
+    \item \texttt{*ptr} accesses the object at that address.
+    \item \texttt{*ptr = 1;} sets the pointed-to object to \(1\).
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    int x = 5;
+    int *y = &x;
+
+    printf("%d\n", x); // 5
+
+    // Go to the object pointed to by y and set its value to 10.
+    *y = 10;
+
+    printf("%d\n", x); // 10
+}
+\end{lstlisting}
+
+\subsubheading{5.2.3 nullptr}
+
+\begin{itemize}
+    \item \texttt{nullptr} is a null pointer constant introduced
+          in C23. It can initialize a pointer that points to no
+          valid object or function.
+    \item Dereferencing a null pointer causes
+          \textbf{undefined behaviour}.
+    \item You can test whether a pointer is null using
+          \texttt{ptr == nullptr}.
+    \item Being non-null alone does not guarantee that a pointer
+          is valid to dereference.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    int *y = nullptr;
+    // Dereferencing y would cause undefined behaviour.
+}
+\end{lstlisting}
+
+\subsubheading{5.2.4 Pointer to a pointer}
+
+\begin{itemize}
+    \item A pointer variable is itself stored in memory and has
+          an address, so another pointer can point to it.
+    \item If \texttt{z} points to \texttt{y}, and \texttt{y}
+          points to \texttt{x}, then \texttt{**z} accesses
+          \texttt{x}.
+\end{itemize}
+
+\begin{center}
+\IfFileExists{../assets/pointerpointer.png}{%
+    \includegraphics[width=0.35\linewidth]{../assets/pointerpointer.png}%
+}{%
+    \fbox{\strut\texttt{z = \&y}}\quad\(\longrightarrow\)\quad\fbox{\strut\texttt{y = \&x}}\quad\(\longrightarrow\)\quad\fbox{\strut\texttt{x = 5}}%
+}
+\par\smallskip
+{\small Fig. 5.2.4. A pointer to another pointer.}
+\end{center}
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    int x = 5;
+    int *y = &x;
+    int **z = &y;
+
+    // *z is y: a pointer to int.
+    // **z is x: an int with value 5.
+}
+\end{lstlisting}
+
+\textbf{Summary:} A pointer variable stores an address.
+
+\begin{itemize}
+    \item Declare a pointer:
+          \texttt{<type> *<ptr\_name>;}
+    \item Access the pointed-to object:
+          \texttt{*<ptr\_name>}
+    \item Obtain a variable's address:
+          \texttt{\&<var\_name>}
+    \item Assign to the pointed-to object:
+          \texttt{*<ptr\_name> = <value>;}
+\end{itemize}
+
+\subheading{5.3 Arrays, Pointer Arithmetic, \texttt{sizeof},
+Structs, Functions}
+
+\subsubheading{5.3.1 Array Memory Addresses}
+
+Arrays and pointers are \textbf{not identical}, but array expressions
+often undergo a conversion called \textbf{array-to-pointer decay}.
+
+\begin{itemize}
+    \item In most expressions, an array is converted to a pointer
+          to its first element, at index \(0\).
+    \item Important exceptions include an array used as the operand
+          of \texttt{sizeof} or unary \texttt{\&}.
+    \item In a function parameter declaration, array notation is
+          adjusted to pointer notation.
+\end{itemize}
+
+These two function declarations describe the same parameter types:
+\begin{lstlisting}[style=cscode]
+void set_doublearr_index(double arr[], size_t index, double val);
+
+// Equivalent declaration:
+void set_doublearr_index(double *arr, size_t index, double val);
+\end{lstlisting}
+
+In the function call below, \texttt{costs} is converted to
+\texttt{\&costs[0]}, the address of its first element.
+
+\begin{lstlisting}[style=cscode]
+void set_doublearr_index(double arr[], size_t index, double val) {
+    arr[index] = val;
+}
+
+int main(void) {
+    double costs[5] = {8.88, 10.22, 9.88, 22.22, 44.44};
+    set_doublearr_index(costs, 3, 5.5);
+    printf("%f\n", costs[3]);
+}
+\end{lstlisting}
+
+Array elements are guaranteed to occupy consecutive locations in
+memory. Arrays are not necessarily stored on a stack.
+
+\begin{lstlisting}[style=cscode]
+int main(void) {
+    char chararr[4] = {0};
+    int intarr[4] = {0};
+
+    printf("chararr[0]: %p vs chararr[1]: %p\n\n",
+           (void *)&chararr[0], (void *)&chararr[1]);
+
+    printf("intarr[0]: %p vs intarr[1]: %p\n",
+           (void *)&intarr[0], (void *)&intarr[1]);
+}
+\end{lstlisting}
+
+Adjacent \texttt{char} elements are one byte apart.
+Example output:
+\begin{lstlisting}[style=plaincode]
+chararr[0]: 0x7ffe74df3b2c vs chararr[1]: 0x7ffe74df3b2d
+\end{lstlisting}
+
+Adjacent \texttt{int} elements are \texttt{sizeof(int)} bytes apart.
+On a system where \texttt{sizeof(int) == 4}, example output is:
+\begin{lstlisting}[style=plaincode]
+intarr[0]: 0x7ffe74df3b10 vs intarr[1]: 0x7ffe74df3b14
+\end{lstlisting}
+
+\subsubheading{5.3.2 Pointer arithmetic}
+
+\begin{itemize}
+    \item Indexing with \texttt{a[i]} is equivalent to
+          \texttt{*(a + i)}.
+    \item One operand of this addition is a pointer; the other has
+          integer type.
+    \item \texttt{x + i} points \(i\) elements after \texttt{x}.
+    \item \texttt{*(x + i)} accesses the object at that position.
+    \item Pointer arithmetic must stay within the same array or
+          reach at most one position past its end. The one-past
+          pointer must not be dereferenced.
+\end{itemize}
+
+\textbf{Incrementing pointers (Lab 5)}
+
+Refer to Lab 5, activity 1.
+
+Each function receives its own copy of the pointer \texttt{arr},
+initially pointing to \texttt{arr[0]}. Moving that local pointer does
+not change the array; modifying \texttt{*arr} changes an actual
+array element.
+
+\begin{longtable}{@{}
+    p{0.18\linewidth}
+    p{0.20\linewidth}
+    p{\dimexpr0.62\linewidth-4\tabcolsep\relax}@{}}
+\toprule
+\textbf{Expression} & \textbf{Parsed as} & \textbf{Effect} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{++arr}
+    & \texttt{++arr}
+    & Moves the pointer to the next element. \\
+\texttt{++*arr}
+    & \texttt{++(*arr)}
+    & Increments the pointed-to integer. \\
+\texttt{*arr++}
+    & \texttt{*(arr++)}
+    & Dereferences the old pointer and advances the pointer
+      to the next element; the integer is unchanged. \\
+\texttt{(*arr)++}
+    & \texttt{(*arr)++}
+    & Increments the pointed-to integer. \\
+\end{longtable}
+
+\subsubheading{5.3.3 \texttt{sizeof}}
+
+\begin{itemize}
+    \item \texttt{sizeof} determines the size, in bytes, of a type
+          or the type of an expression.
+    \item For ordinary non-variable-length types, its result is
+          determined at compile time. Variable-length arrays can
+          require evaluation at runtime.
+    \item \textbf{Return type}: \texttt{size\_t}, an unsigned
+          integer type.
+    \item Print a \texttt{size\_t} value using
+          \texttt{printf} with \texttt{\%zu}.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int num = 42;
+
+printf("Size of int: %zu bytes\n", sizeof(int));
+printf("Size of char: %zu byte\n", sizeof(char)); // Always 1
+printf("Size of num: %zu bytes\n", sizeof num);
+
+int my_array[] = {10, 20, 30, 40, 50};
+
+size_t total_bytes = sizeof(my_array);
+size_t array_length = sizeof(my_array) / sizeof(my_array[0]);
+
+printf("Total memory size: %zu bytes\n", total_bytes);
+printf("Number of elements: %zu\n", array_length);
+\end{lstlisting}
+
+\textbf{Important:}
+The array-length calculation works when \texttt{my\_array} is
+an actual array. It does not work on a pointer or on an array
+parameter that has been adjusted to a pointer.
+
+\subsubheading*{Important array--pointer relationship}
+
+Arrays and pointers are not equivalent.
+
+This causes a compilation error:
+\begin{lstlisting}[style=cscode]
+double arr1[5] = {0};
+double arr2[] = arr1; // Invalid array initialization
+\end{lstlisting}
+
+However, this works:
+\begin{lstlisting}[style=cscode]
+double arr1[5] = {0};
+double *arr2 = arr1;
+\end{lstlisting}
+
+Here, \texttt{arr2} points to the first element of \texttt{arr1};
+it is not a separate copy of the array.
+
+\subsubheading{5.3.4 Structs}
+
+\begin{itemize}
+    \item A \textbf{pointer to a struct} stores the address of a
+          struct variable.
+    \item Declare it using the struct's type followed by
+          \texttt{*}, and initialize it with \texttt{\&}.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+typedef struct {
+    double x, y, z;
+} Acceleration;
+
+Acceleration a = {0.2, 0.3, -0.5};
+Acceleration *p = &a;
+\end{lstlisting}
+
+Here, \texttt{p} points to \texttt{a}; dereferencing \texttt{p}
+gives access to that struct.
+
+\textbf{Accessing struct members: \texttt{.} versus \texttt{->}}
+
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.22\linewidth}
+    >{\raggedright\arraybackslash}p{\dimexpr0.78\linewidth-2\tabcolsep\relax}@{}}
+\toprule
+\textbf{Expression} & \textbf{Meaning} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{a.x}
+    & Access member \texttt{x} of struct \texttt{a}. \\
+\texttt{(*p).x}
+    & Dereference \texttt{p}, then access member \texttt{x}. \\
+\texttt{p->x}
+    & Shorthand for \texttt{(*p).x}. \\
+\end{longtable}
+
+\begin{lstlisting}[style=cscode]
+printf("%f\n", a.x);    // 0.200000
+printf("%f\n", (*p).x); // 0.200000
+printf("%f\n", p->x);   // 0.200000
+
+p->x = 1.5;
+printf("%f\n", a.x);    // 1.500000: a itself was modified.
+\end{lstlisting}
+
+\begin{itemize}
+    \item Use \textbf{\texttt{.} with a struct object} and
+          \textbf{\texttt{->} with a pointer to a struct}.
+    \item Parentheses are needed in \texttt{(*p).x} because
+          \texttt{.} has higher precedence than unary \texttt{*}.
+    \item \texttt{sizeof p} gives the size of the pointer;
+          \texttt{sizeof *p} gives the size of the struct.
+\end{itemize}
+
+\textbf{Why pass structs using pointers?}
+
+\begin{itemize}
+    \item A function can modify the caller's original struct
+          through its pointer.
+    \item Passing a pointer avoids passing the entire struct by
+          value, which can reduce copying for large structs.
+    \item It does not guarantee faster execution; compiler
+          optimizations and the task affect performance.
+    \item For a function that should only read the struct, use
+          a parameter such as \texttt{Acceleration const *p}.
+\end{itemize}
+
+\subsubheading{5.3.5 Functions}
+
+\begin{itemize}
+    \item C passes arguments \textbf{by value}: each parameter
+          receives a copy of its argument.
+    \item Passing a pointer copies the \textbf{pointer value},
+          not the pointed-to object.
+    \item Dereferencing that copied pointer accesses the caller's
+          object, allowing the function to modify it.
+\end{itemize}
+
+\textbf{Passing a value versus passing its address}
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+void set_copy(int x) {
+    x = 10; // Changes only the local copy.
+}
+
+void set_ptr(int *p) {
+    *p = 10; // Changes the caller's integer.
+}
+
+int main(void) {
+    int n = 5;
+
+    set_copy(n);
+    printf("%d\n", n); // 5
+
+    set_ptr(&n);
+    printf("%d\n", n); // 10
+}
+\end{lstlisting}
+
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.25\linewidth}
+    >{\raggedright\arraybackslash}p{\dimexpr0.75\linewidth-2\tabcolsep\relax}@{}}
+\toprule
+\textbf{Step} & \textbf{Meaning} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{set\_copy(n)}
+    & Copy the value of \texttt{n} into the parameter
+      \texttt{x}. \\
+\texttt{set\_ptr(\&n)}
+    & Copy the address of \texttt{n} into the parameter
+      \texttt{p}. \\
+\texttt{*p = 10}
+    & Write \texttt{10} into the object pointed to by
+      \texttt{p}, which is \texttt{n}. \\
+\end{longtable}
+
+\textbf{Example: correcting a struct}
+
+Using the \texttt{Acceleration} type from 5.3.4:
+
+\begin{lstlisting}[style=cscode]
+// Pass the struct by value and return the corrected copy.
+Acceleration correct_copy(Acceleration a) {
+    a.x -= 0.00000002;
+    a.y += 0.00000001;
+    a.z -= 0.00000003;
+    return a;
+}
+
+// Pass its address and modify the original struct directly.
+void correct_ptr(Acceleration *a) {
+    a->x -= 0.00000002;
+    a->y += 0.00000001;
+    a->z -= 0.00000003;
+}
+\end{lstlisting}
+
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.25\linewidth}
+    >{\raggedright\arraybackslash}p{0.32\linewidth}
+    >{\raggedright\arraybackslash}p{\dimexpr0.43\linewidth-4\tabcolsep\relax}@{}}
+\toprule
+\textbf{Approach} & \textbf{Call in \texttt{main}} &
+\textbf{Effect} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+Pass the struct by value
+    & \texttt{a = correct\_copy(a);}
+    & Return a corrected copy and assign it back to
+      \texttt{a}. \\
+Pass the struct's address
+    & \texttt{correct\_ptr(\&a);}
+    & Modify the original \texttt{a} through its address. \\
+\end{longtable}
+
+\begin{itemize}
+    \item Calling \texttt{correct\_copy(a)} without assigning its
+          return value leaves the caller's \texttt{a} unchanged.
+    \item \texttt{correct\_ptr} returns \texttt{void} because its
+          result is written into the original struct.
+\end{itemize}
+
+\textbf{Changing the object versus changing the local pointer}
+
+\begin{lstlisting}[style=cscode]
+void redirect(int *p, int *q) {
+    p = q; // Changes only this function's local pointer.
+}
+
+int main(void) {
+    int x = 5;
+    int y = 10;
+    int *ptr = &x;
+
+    redirect(ptr, &y);
+    // ptr still points to x.
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item Assigning to \texttt{*p} changes the pointed-to object.
+    \item Assigning to \texttt{p} changes only the function's
+          local pointer.
+    \item To change the caller's pointer variable, pass its
+          address using a \textbf{pointer to a pointer}
+          (\texttt{int **}); see 5.2.4.
+\end{itemize}
+
+\textbf{Arrays as function parameters}
+
+\begin{itemize}
+    \item \texttt{void f(int arr[])} and
+          \texttt{void f(int *arr)} declare the same parameter type.
+    \item When passed an array, the function receives a pointer
+          to its first element; it can modify elements using
+          \texttt{arr[i]}.
+    \item Pass the array length separately, for example:
+          \texttt{void f(int *arr, size\_t len)}.
+    \item Inside such a function, \texttt{sizeof arr} gives the
+          pointer size, so it cannot determine the original
+          array length.
+\end{itemize}
+
+The caller must supply a pointer to a suitable live object;
+dereferencing an uninitialized, null, or dangling pointer
+causes \textbf{undefined behaviour}.
+
+\subheading{5.4 Strings}
+
+\subsubheading{5.4.1 Strings and the null character}
+
+A string is a contiguous sequence of characters terminated by,
+and including, the first null character,
+\texttt{'\textbackslash0'}.
+
+\begin{center}
+\begin{tabular}{@{}*{6}{c}@{}}
+\toprule
+\(N\) & \(N+1\) & \(N+2\) & \(N+3\) & \(N+4\) & \(N+5\) \\
+\midrule
+\texttt{'H'} &
+\texttt{'e'} &
+\texttt{'l'} &
+\texttt{'l'} &
+\texttt{'o'} &
+\texttt{'\textbackslash0'} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item C strings do not store a separate length field.
+          String functions find the end using the null character.
+    \item The null character acts as the string terminator.
+    \item Without a terminator, operations that expect a string
+          may read beyond the array's bounds, causing
+          \textbf{undefined behaviour}.
+\end{itemize}
+
+\subsubheading{5.4.2 Modifiable and read-only strings}
+
+\textbf{A modifiable character array}
+
+\begin{itemize}
+    \item The following are alternative declarations with the same
+          initial contents. Use one declaration at a time.
+    \item The array can be modified, for example using
+          \texttt{p[0] = 'a';}.
+    \item String literals automatically include an extra
+          \texttt{'\textbackslash0'}.
+    \item To store the complete string, the array must have space
+          for the null terminator.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+// Alternative declarations: use one at a time.
+char p[] = "hi";
+char p[] = {'h', 'i', '\0'};
+char p[3] = "hi";
+\end{lstlisting}
+
+\textbf{A pointer to a string literal}
+
+\begin{lstlisting}[style=cscode]
+char *p = "hi";
+\end{lstlisting}
+
+\begin{itemize}
+    \item Here, \texttt{p} points to a string literal.
+    \item Attempting to modify the literal, such as with
+          \texttt{p[0] = 'a';}, causes
+          \textbf{undefined behaviour}.
+    \item Implementations often store string literals in
+          read-only memory.
+\end{itemize}
+
+\subsubheading{5.4.3 Printing strings}
+
+\begin{lstlisting}[style=cscode]
+char *p = "Hello\n";
+printf("%s\n", p);
+\end{lstlisting}
+
+\begin{itemize}
+    \item \textbf{Format specifier}: \texttt{\%s} prints a string.
+    \item Printing stops at the first
+          \texttt{'\textbackslash0'}, which is not printed.
+    \item This example prints two newline characters: one from
+          the string and one from the format string.
+\end{itemize}
+
+\subsubheading{5.4.4 \texttt{const}}
+
+\begin{itemize}
+    \item \texttt{const} is a \textbf{type qualifier} indicating
+          that something must not be modified through the
+          const-qualified access.
+    \item For pointers, its position determines whether the
+          pointed-to value, the pointer itself, or both are
+          protected.
+    \item Use it when a value or function input should not be
+          modified. It communicates intent and helps the compiler
+          catch mistakes.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int const x = 5; // Equivalent to: const int x = 5;
+// x = 10;      // Compiler error: x is const.
+\end{lstlisting}
+
+\textbf{\texttt{const} and string literals}
+
+Modifying a string literal is \textbf{undefined behaviour (UB)},
+even when the pointer has type \texttt{char *}.
+
+\begin{lstlisting}[style=cscode]
+char *p = "hi";
+// p[0] = 'a'; // UB: attempts to modify a string literal.
+\end{lstlisting}
+
+Prefer a pointer to \texttt{const char} so the compiler catches
+attempts to write through it:
+
+\begin{lstlisting}[style=cscode]
+char const *p = "hi"; // Equivalent to: const char *p = "hi";
+
+// p[0] = 'a';       // Compiler error: cannot modify through p.
+p = "bye";          // Allowed: the pointer itself can change.
+\end{lstlisting}
+
+\textbf{A pointer to a const value versus a const pointer}
+
+The position of \texttt{const} matters. Here, assume that
+\texttt{x} is a modifiable \texttt{int}.
+
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.36\linewidth}
+    >{\raggedright\arraybackslash}p{0.28\linewidth}
+    >{\raggedright\arraybackslash}p{0.18\linewidth}
+    >{\raggedright\arraybackslash}p{\dimexpr0.18\linewidth-6\tabcolsep\relax}@{}}
+\toprule
+\textbf{Declaration} &
+\textbf{Meaning} &
+\textbf{Reassign \texttt{p}?} &
+\textbf{Assign to \texttt{*p}?} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{int *p = \&x;}
+    & Pointer to an integer
+    & Yes & Yes \\
+\texttt{int const *p = \&x;}
+    & Pointer to a const integer
+    & Yes & No \\
+\texttt{int *const p = \&x;}
+    & Const pointer to an integer
+    & No & Yes \\
+\texttt{int const *const p = \&x;}
+    & Const pointer to a const integer
+    & No & No \\
+\end{longtable}
+
+\begin{itemize}
+    \item \texttt{const} \textbf{before \texttt{*}} qualifies the
+          pointed-to type.
+    \item \texttt{const} \textbf{after \texttt{*}} qualifies the
+          pointer itself.
+    \item \texttt{int const *p} and \texttt{const int *p}
+          are equivalent.
+\end{itemize}
+
+\textbf{\texttt{const} does not make every object it points to
+unchangeable}
+
+A pointer to const prevents modification
+\textbf{through that pointer}. A modifiable object can still be
+changed through another name or pointer.
+
+\begin{lstlisting}[style=cscode]
+char text[] = "hi";
+char const *p = text;
+
+// p[0] = 'H'; // Compiler error.
+text[0] = 'H'; // Allowed: text is a modifiable array.
+
+printf("%s\n", p); // Hi
+\end{lstlisting}
+
+However, if the object itself was declared \texttt{const},
+attempting to modify it, even through a cast, causes UB.
+
+\textbf{\texttt{const} in function parameters}
+
+\begin{lstlisting}[style=cscode]
+void print_arr(int const arr[], size_t len);
+
+// Equivalent parameter type:
+void print_arr(int const *arr, size_t len);
+\end{lstlisting}
+
+\begin{itemize}
+    \item The function can read \texttt{arr[i]}, but cannot assign
+          to \texttt{arr[i]} through this parameter.
+    \item The local pointer can still move, for example using
+          \texttt{++arr}.
+    \item The caller can pass a modifiable array. Passing it does
+          not make the original array const.
+\end{itemize}
+
+Examples from \texttt{<string.h>} using simplified declarations:
+
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.55\linewidth}
+    >{\raggedright\arraybackslash}p{\dimexpr0.45\linewidth-2\tabcolsep\relax}@{}}
+\toprule
+\textbf{Function declaration} &
+\textbf{Meaning of \texttt{const}} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\texttt{size\_t strlen(char const *s);}
+    & Reads the string and returns its length, excluding
+      \texttt{'\textbackslash0'}. \\
+\texttt{char *strcpy(char *dest, char const *src);}
+    & Copies \texttt{src}, including
+      \texttt{'\textbackslash0'}, into writable \texttt{dest}. \\
+\end{longtable}
+
+For \texttt{strcpy}, \texttt{dest} must have enough space, and
+the source and destination must not overlap.
+
+\subheading{5.5 Pointer Provenance}
+
+A pointer's address alone does not tell us whether using it is
+valid. We also need to know \textbf{where it came from},
+\textbf{what memory it can access}, and
+\textbf{whether that memory still exists}.
+
+The lecture uses pointer provenance as a \textbf{mental model}
+with two components:
+
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.20\linewidth}
+    >{\raggedright\arraybackslash}p{\dimexpr0.80\linewidth-2\tabcolsep\relax}@{}}
+\toprule
+\textbf{Component} & \textbf{Question} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{Spatial}
+    & Which memory locations can this pointer access? \\
+\textbf{Temporal}
+    & During what part of the program's execution can it
+      access them? \\
+\end{longtable}
+
+These are facts we must reason about; ordinary C pointers do not
+automatically store an array length or expiry time.
+
+\subsubheading{5.5.1 Origins: what does the pointer represent?}
+
+Two pointers with the same type can represent different things:
+
+\begin{lstlisting}[style=cscode]
+char ch = 'b';
+char text[] = "abcd";
+
+char *p = &ch;  // Points to one character.
+char *q = text; // Points to the first character of a string.
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{*p} is valid, but \texttt{p} does not point to a
+          null-terminated string. Do not pass it to
+          \texttt{\%s} or \texttt{strlen}.
+    \item \texttt{q} points into an array containing
+          \texttt{\{'a', 'b', 'c', 'd', '\textbackslash0'\}},
+          so it can be used as a string.
+    \item Similarly, \texttt{char **r} may point to one
+          \texttt{char *} variable or to an element of an array
+          of \texttt{char *} pointers.
+    \item The type alone does not tell us the array length,
+          whether there is a string terminator, or whether the
+          contents are writable.
+\end{itemize}
+
+\textbf{Takeaway:}
+Trace how the pointer was created and what the caller promises
+before deciding how to use it.
+
+\subsubheading{5.5.2 Spatial component: access within valid bounds}
+
+For an array of \(n\) elements:
+
+\begin{itemize}
+    \item Dereference only pointers to actual elements:
+          indices \(0\) to \(n-1\).
+    \item Pointer arithmetic may produce a pointer within the
+          same array, or \textbf{one past its end}.
+    \item A pointer one past the end may be formed, but
+          \textbf{must not be dereferenced}.
+    \item Forming a pointer farther outside the array using
+          pointer arithmetic is already UB.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int arr[] = {10, 20, 30};
+int *p = arr;
+
+printf("%d\n", p[2]); // 30: valid element.
+int *end = arr + 3;   // Valid: one past the end.
+
+// printf("%d\n", *end); // UB: no element exists here.
+// printf("%d\n", p[-1]); // UB: before the array.
+// int *bad = p + 4;     // UB: beyond one past the end.
+\end{lstlisting}
+
+\begin{itemize}
+    \item Knowing that another variable is nearby in memory does
+          not allow accessing it by indexing beyond this array.
+    \item Subtracting pointers requires both to refer to the same
+          array, or one past it. The result counts
+          \textbf{elements}, not bytes, and must be representable
+          in \texttt{ptrdiff\_t}.
+\end{itemize}
+
+\textbf{Spatial reasoning for strings}
+
+\begin{lstlisting}[style=cscode]
+void print_str(char const *ptr) {
+    while (*ptr != '\0') {
+        putchar(*ptr++);
+    }
+}
+
+int main(void) {
+    char const s[] = "halp";
+    print_str(s);
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item The caller must provide a valid string with an
+          accessible \texttt{'\textbackslash0'}.
+    \item \texttt{*ptr++} means \texttt{*(ptr++)}: it yields the
+          character at the old pointer position and advances
+          the pointer.
+    \item The loop checks the terminator and stops without
+          reading beyond it.
+    \item A larger character array may contain unused space
+          after \texttt{'\textbackslash0'}. The string ends at
+          the first null character, while the array's bounds
+          depend on its size.
+\end{itemize}
+
+\subsubheading{5.5.3 Aliasing and overlapping ranges}
+
+\textbf{Aliasing} means different pointers refer to the same object.
+
+\begin{lstlisting}[style=cscode]
+int value = 0;
+int *x_ptr = &value;
+int *y_ptr = &value;
+
+*x_ptr = 5;
+*y_ptr = 20;
+
+printf("%d\n", *x_ptr); // 20: both point to value.
+\end{lstlisting}
+
+Writing through one pointer can therefore change what another
+pointer reads.
+
+\textbf{Example: copying an array without modifying the source}
+
+\begin{lstlisting}[style=cscode]
+void copy_arr(int const from[], int to[], size_t nmemb) {
+    for (size_t idx = 0; idx < nmemb; ++idx) {
+        to[idx] = from[idx];
+    }
+}
+\end{lstlisting}
+
+To copy correctly while leaving the source unchanged, use the
+following contract:
+
+\begin{itemize}
+    \item \texttt{from} has at least \texttt{nmemb} readable elements.
+    \item \texttt{to} has at least \texttt{nmemb} writable elements.
+    \item The ranges
+          \texttt{[from, from + nmemb)} and
+          \texttt{[to, to + nmemb)} do not overlap.
+          The closing \texttt{)} excludes the endpoint.
+\end{itemize}
+
+What if the caller passes overlapping parts of one array?
+
+\begin{lstlisting}[style=cscode]
+int arr[] = {1, 2, 3, 4};
+
+copy_arr(arr, arr + 1, 3);
+
+// Result: {1, 1, 1, 1}, rather than the intended {1, 1, 2, 3}.
+\end{lstlisting}
+
+\begin{itemize}
+    \item Writing \texttt{to[0]} changes \texttt{from[1]} before
+          it is read. Subsequent iterations propagate that
+          changed value.
+    \item The const-qualified element type prevents writes
+          \textbf{through \texttt{from}}, but does not prevent
+          writes to the same elements through \texttt{to}.
+    \item This loop's overlapping accesses are not automatically
+          UB. This call violates the stated copying contract
+          and gives the wrong result.
+\end{itemize}
+
+\subsubheading{5.5.4 Temporal component: the pointed-to object must
+still exist}
+
+An object's \textbf{lifetime} is the period during which it exists.
+A pointer can only access it during that period.
+
+\textbf{Returning a pointer to a local array}
+
+\begin{lstlisting}[style=cscode]
+int *get_arr(void) {
+    int arr[] = {0, 1, 2};
+    return arr; // Bad: arr's lifetime ends when the function returns.
+}
+
+int main(void) {
+    int *p = get_arr();
+    printf("%d\n", p[0]); // UB: the local array no longer exists.
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item Returning the pointer does not copy the array or
+          extend its lifetime.
+    \item The pointer is now a \textbf{dangling pointer}:
+          its former object no longer exists.
+    \item Memory that appears to retain the old values does not
+          make accessing it valid.
+\end{itemize}
+
+\textbf{Leaving a block}
+
+\begin{lstlisting}[style=cscode]
+int *p;
+
+{
+    int x = 10;
+    p = &x;
+} // x's lifetime ends here.
+
+// printf("%d\n", *p); // UB: x no longer exists.
+\end{lstlisting}
+
+The pointer variable may still exist even after the pointed-to
+object has stopped existing.
+
+\subsubheading{5.5.5 Uninitialized pointers and pointers to pointers}
+
+Declaring a local pointer does not create an object for it to
+point to:
+
+\begin{lstlisting}[style=cscode]
+int *p;
+
+// *p = 5; // UB: p is uninitialized; it has no valid target.
+\end{lstlisting}
+
+Initialize it with the address of a suitable live object before
+dereferencing:
+
+\begin{lstlisting}[style=cscode]
+int x;
+int *p = &x;
+
+*p = 5; // Valid: writes to x.
+\end{lstlisting}
+
+However, we can pass the
+\textbf{address of an uninitialized pointer variable}
+to a function that assigns it a value:
+
+\begin{lstlisting}[style=cscode]
+void foo(int **x) {
+    *x = nullptr; // C23: assigns a null pointer to the caller's p.
+}
+
+int main(void) {
+    int *p;
+    foo(&p);
+
+    // p is now a null pointer; dereferencing p would be UB.
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{\&p} is valid because the pointer variable
+          \texttt{p} itself exists.
+    \item \texttt{x} points to \texttt{p}, so
+          \texttt{*x = nullptr;} gives \texttt{p} a defined value.
+    \item The function does not read the old value of
+          \texttt{p} or dereference that old value.
+\end{itemize}
+
+\textbf{Before using a pointer, check:}
+its origin, valid bounds, the object's lifetime, permission to
+read or write, and whether other pointers access the same memory.
+
+\heading{L6: Dynamic memory allocation}
+\label{l6-dynamic-memory-allocation}
+\hypertarget{l6-dynamic-memory-allocation}{}
+
+\subheading{6.1 Memory regions, pointers, and \texttt{const}}
+\label{memory-regions-pointers-and-const}
+\hypertarget{memory-regions-pointers-and-const}{}
+
+\subsubheading{6.1.1 Where objects are stored}
+\label{where-objects-are-stored}
+\hypertarget{where-objects-are-stored}{}
+
+A typical implementation separates program memory into these regions:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1900}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Region
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Contains
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Lifetime / management
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Code & Compiled instructions & Exists while the program runs. \\
+Read-only data & String literals such as \texttt{"hello"} & Static lifetime; modifying a string literal is UB. \\
+Stack & Most ordinary local variables and function-call data & Automatic storage is reclaimed when the relevant block or call ends. \\
+Heap & Objects created by dynamic allocation & Remain allocated until explicitly deallocated. \\
+Static data & File-scope variables and local \texttt{static} variables & Exist for the entire program; covered in Lecture 9. \\
+\end{longtable}
+
+These regions are an implementation model. \textbf{A pointer variable and the object it points to can have different lifetimes.}
+
+\begin{lstlisting}[style=cscode]
+char s[] = "halp";
+char const *t = "halp";
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{s} is a local array containing its own modifiable copy, including \texttt{\textquotesingle{}\textbackslash{}0\textquotesingle{}}.
+\item
+  \texttt{t} is a local pointer variable pointing to a string literal.
+\item
+  Changing \texttt{t} does not change the literal. Modifying the literal itself is UB.
+\end{itemize}
+
+\subsubheading{6.1.2 \texttt{const} in different positions}
+\label{const-in-different-positions}
+\hypertarget{const-in-different-positions}{}
+
+Assume \texttt{char\ str{[}{]}\ =\ "hi";} and consider each declaration separately:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4400}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3600}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Declaration
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Can change \texttt{p}?
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Can change a character through \texttt{p}?
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{char\ *p\ =\ str;} & Yes & Yes \\
+\texttt{char\ const\ *p\ =\ str;} & Yes & No \\
+\texttt{char\ *const\ p\ =\ str;} & No & Yes \\
+\texttt{char\ const\ *const\ p\ =\ str;} & No & No \\
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{const\ char\ *p} is equivalent to \texttt{char\ const\ *p}.
+\item
+  Before \texttt{*}: qualifies the pointed-to type. After \texttt{*}: qualifies the pointer itself.
+\item
+  A pointer to const restricts access through that pointer; another valid reference may still modify an originally modifiable object.
+\end{itemize}
+
+\subheading{6.2 Automatic and dynamic lifetimes}
+\label{automatic-and-dynamic-lifetimes}
+\hypertarget{automatic-and-dynamic-lifetimes}{}
+
+\subsubheading{6.2.1 Why returning a local array fails}
+\label{why-returning-a-local-array-fails}
+\hypertarget{why-returning-a-local-array-fails}{}
+
+\begin{lstlisting}[style=cscode]
+double *bad_costs(void) {
+    double costs[] = {1.0, 2.0, 3.0};
+    return costs; // The local array's lifetime ends on return.
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{return\ costs} produces a pointer to the first element; it does not copy the array.
+\item
+  Accessing that array through the returned pointer is UB because the array no longer exists.
+\item
+  Returning a pointer does not extend the pointed-to object's lifetime.
+\end{itemize}
+
+\subsubheading{6.2.2 Dynamic allocation}
+\label{dynamic-allocation}
+\hypertarget{dynamic-allocation}{}
+
+Dynamic allocation creates storage whose lifetime is independent of the function call that requested it.
+
+Use it when:
+
+\begin{itemize}
+\tightlist
+\item
+  Data must survive after the allocating function returns.
+\item
+  An array is too large for the available stack.
+\item
+  The required size is known only at runtime.
+\item
+  The storage may need resizing, or a data structure grows as the program runs.
+\end{itemize}
+
+\textbf{Course convention:} the slides allow assuming allocation succeeds in CS1010. General C code should check for failure; the examples below include checks. The slides also disallow VLAs for the remainder of the course.
+
+The examples use C23's \texttt{nullptr}. In older C, use \texttt{NULL}. Allocation examples assume positive sizes and byte counts that fit in \texttt{size\_t}.
+
+\subheading{6.3 The allocation family: \texttt{\textless{}stdlib.h\textgreater{}}}
+\label{the-allocation-family-stdlib.h}
+\hypertarget{the-allocation-family-stdlib.h}{}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4600}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Function
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Purpose
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Initial contents / important behavior
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{malloc(bytes)} & Allocate \texttt{bytes} contiguous bytes. & Contents are uninitialized. \\
+\texttt{calloc(count,\ size)} & Allocate space for \texttt{count} elements of \texttt{size} bytes each. & Sets every allocated byte to zero. \\
+\texttt{realloc(ptr,\ bytes)} & Resize a previously allocated block. & Preserves the initial contents up to the smaller of the old and new sizes; added bytes are uninitialized. \\
+\texttt{free(ptr)} & Deallocate a block. & Does not reset the caller's pointer or free other allocations referenced by the block. \\
+\end{longtable}
+
+The allocating functions return a pointer, or a null pointer on failure. \texttt{free} returns no value.
+
+\subsubheading{6.3.1 Allocating the correct number of bytes}
+\label{allocating-the-correct-number-of-bytes}
+\hypertarget{allocating-the-correct-number-of-bytes}{}
+
+\begin{lstlisting}[style=cscode]
+#include <stdlib.h>
+
+int *arr = malloc(n * sizeof *arr); // n integers
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{sizeof\ *arr} is the size of one element; \texttt{sizeof\ arr} is the size of the pointer.
+\item
+  \texttt{sizeof\ *arr} does not evaluate the dereference here, so the allocation declaration is valid.
+\item
+  For non-VLA types, \texttt{sizeof} does not evaluate its operand. It returns a \texttt{size\_t}; print it using \texttt{\%zu}.
+\item
+  In C, \texttt{void\ *} converts automatically to an object-pointer type on assignment. A cast on \texttt{malloc} is unnecessary; include \texttt{\textless{}stdlib.h\textgreater{}}.
+\item
+  A \texttt{void\ *} must be converted to a suitable object-pointer type before accessing the stored object.
+\item
+  Keep the element count separately: a pointer does not carry an array length.
+\item
+  Ensure \texttt{n\ *\ sizeof\ *arr} cannot overflow before allocating from an unchecked size.
+\end{itemize}
+
+\subsubheading{6.3.2 Returning a dynamically allocated array}
+\label{returning-a-dynamically-allocated-array}
+\hypertarget{returning-a-dynamically-allocated-array}{}
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+#include <stdlib.h>
+
+double *get_costs(void) {
+    double *costs = malloc(3 * sizeof *costs);
+    if (costs == nullptr) {
+        return nullptr;
+    }
+
+    costs[0] = 1.0;
+    costs[1] = 2.0;
+    costs[2] = 3.0;
+    return costs; // Caller receives ownership of this allocation.
+}
+
+int main(void) {
+    double *c = get_costs();
+    if (c == nullptr) {
+        return EXIT_FAILURE;
+    }
+
+    printf("%f\n", c[0]);
+    free(c);
+    c = nullptr;
+}
+\end{lstlisting}
+
+The local pointer \texttt{costs} disappears when \texttt{get\_costs} returns. The allocated array remains alive until \texttt{free(c)}.
+
+\subsubheading{6.3.3 \texttt{calloc}}
+\label{calloc}
+\hypertarget{calloc}{}
+
+\begin{lstlisting}[style=cscode]
+int *counts = calloc(n, sizeof *counts);
+if (counts == nullptr) {
+    // Handle failure before accessing counts[i].
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Allocates the array and initializes its bytes to zero; integer elements start at zero.
+\item
+  Bytewise zeroing is the guarantee. Do not generalize it to every possible pointer or floating-point representation.
+\item
+  \texttt{malloc} does not initialize the elements; assign values before reading them.
+\end{itemize}
+
+\subsubheading{6.3.4 \texttt{realloc}}
+\label{realloc}
+\hypertarget{realloc}{}
+
+Use a temporary pointer when requesting a \textbf{positive} new size:
+
+\begin{lstlisting}[style=cscode]
+int *resized = realloc(arr, new_count * sizeof *arr);
+if (resized == nullptr) {
+    // arr still owns the original allocation; handle the failure.
+} else {
+    arr = resized;
+    // Use arr for future accesses; initialize any new elements.
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  The allocation may stay in place or move to a new address.
+\item
+  On success, use the returned pointer. Old pointers into the previous allocation must no longer be used, even if the returned address looks unchanged.
+\item
+  On failure for a positive requested size, the original allocation remains valid.
+\item
+  \texttt{arr\ =\ realloc(arr,\ ...)} can lose the only reference to the original block if resizing fails.
+\item
+  Handle an intended zero-element result separately, e.g., by freeing the allocation.
+\end{itemize}
+
+\subheading{6.4 Freeing memory and common mistakes}
+\label{freeing-memory-and-common-mistakes}
+\hypertarget{freeing-memory-and-common-mistakes}{}
+
+\subsubheading{6.4.1 Rules for \texttt{free}}
+\label{rules-for-free}
+\hypertarget{rules-for-free}{}
+
+\begin{itemize}
+\tightlist
+\item
+  Free each owned allocation exactly once when it is no longer needed.
+\item
+  Pass its \textbf{base pointer}: the start returned by the allocator, not an interior element.
+\item
+  \texttt{free(nullptr)} is valid and does nothing.
+\item
+  Freeing a block does not set pointer variables to null.
+\item
+  Setting one pointer to \texttt{nullptr} does not repair other aliases to the freed block.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int *p = malloc(3 * sizeof *p);
+// Check p, initialize its elements, and use them.
+free(p);
+p = nullptr;
+\end{lstlisting}
+
+\subsubheading{6.4.2 Common errors}
+\label{common-errors}
+\hypertarget{common-errors}{}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2800}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3800}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Mistake
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Example
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Consequence
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Dereference after allocation failure & \texttt{p{[}0{]}\ =\ 1;} when \texttt{p\ ==\ nullptr} & UB. \\
+Read an uninitialized element & Reading an integer immediately after \texttt{malloc} & An indeterminate value; may cause UB. Initialize first. \\
+Use after free & \texttt{free(p);} followed by \texttt{p{[}0{]}} & UB. \\
+Double free & Free the same allocation twice, including through aliases. & UB. \\
+Free an interior pointer & \texttt{free(p\ +\ 1);} & UB. \\
+Free automatic storage & \texttt{int\ x;\ free(\&x);} & UB. \\
+Free a string literal & \texttt{free("hello");} & UB. \\
+Lose the final pointer to an allocation & Overwrite \texttt{p} before freeing its old allocation. & Memory leak. \\
+Free only an outer pointer array & \texttt{free(grid);} without freeing owned rows. & Row allocations leak. \\
+\end{longtable}
+
+A \textbf{memory leak} is allocated storage that is no longer properly released or reachable. A leak alone is not automatically UB, but wastes resources.
+
+\subheading{6.5 Dynamically allocated grids and structs}
+\label{dynamically-allocated-grids-and-structs}
+\hypertarget{dynamically-allocated-grids-and-structs}{}
+
+\subsubheading{6.5.1 An array of row pointers}
+\label{an-array-of-row-pointers}
+\hypertarget{an-array-of-row-pointers}{}
+
+For \texttt{rows} rows and \texttt{cols} columns, allocate:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  An array of \texttt{rows} pointers.
+\item
+  A separate array of \texttt{cols} integers for each row.
+\end{enumerate}
+
+\begin{lstlisting}[style=cscode]
+int **create_grid(size_t rows, size_t cols) {
+    if (rows == 0 || cols == 0) {
+        return nullptr;
+    }
+
+    int **grid = malloc(rows * sizeof *grid);
+    if (grid == nullptr) {
+        return nullptr;
+    }
+
+    for (size_t r = 0; r < rows; ++r) {
+        grid[r] = malloc(cols * sizeof *grid[r]);
+        if (grid[r] == nullptr) {
+            for (size_t i = 0; i < r; ++i) {
+                free(grid[i]);
+            }
+            free(grid);
+            return nullptr;
+        }
+    }
+    return grid;
+}
+
+void free_grid(int **grid, size_t rows) {
+    if (grid == nullptr) {
+        return;
+    }
+    for (size_t r = 0; r < rows; ++r) {
+        free(grid[r]);
+    }
+    free(grid);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Assign row elements before reading them; the rows above are uninitialized.
+\item
+  \texttt{grid{[}r{]}{[}c{]}} is equivalent to \texttt{*(*(grid\ +\ r)\ +\ c)}.
+\item
+  Each row is contiguous, but separately allocated rows need not be adjacent.
+\item
+  Free the rows \textbf{before} the pointer array, so their addresses remain accessible.
+\item
+  This layout also supports \textbf{jagged arrays}, where each row has a different length.
+\item
+  For an array of separately allocated strings, free each owned string, then the pointer array.
+\end{itemize}
+
+\subsubheading{6.5.2 Pointer expressions in a grid}
+\label{pointer-expressions-in-a-grid}
+\hypertarget{pointer-expressions-in-a-grid}{}
+
+For \texttt{int\ **grid}:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Expression
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Type
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{grid\ +\ 1} & \texttt{int\ **} & Address of the next row-pointer slot. \\
+\texttt{grid{[}1{]}} & \texttt{int\ *} & Pointer stored in that slot: the start of the second row. \\
+\texttt{*grid} & \texttt{int\ *} & The first row's pointer. \\
+\texttt{*grid\ +\ 1} & \texttt{int\ *} & Pointer to the second integer of the first row. \\
+\texttt{**grid} & \texttt{int} & First integer of the first row. \\
+\texttt{**grid\ +\ 1} & \texttt{int} & That integer's value plus one. \\
+\end{longtable}
+
+\subsubheading{6.5.3 An array of pointers is different from a fixed 2D array}
+\label{an-array-of-pointers-is-different-from-a-fixed-2d-array}
+\hypertarget{an-array-of-pointers-is-different-from-a-fixed-2d-array}{}
+
+\begin{lstlisting}[style=cscode]
+char a[5][2];
+char (*p)[2] = a; // Valid: pointer to a row containing two chars.
+// char **q = a; // Incompatible types: a does not contain char* slots.
+\end{lstlisting}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4100}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Property
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\texttt{int\ a{[}R{]}{[}C{]}}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Separately allocated rows through \texttt{int\ **grid}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+What the outer elements are & Arrays of \texttt{C} integers. & Pointers to rows. \\
+Layout & All rows are contiguous. & Row allocations may be scattered. \\
+Decay of outer array & Pointer to a row: \texttt{int\ (*){[}C{]}}. & A row-pointer array decays to \texttt{int\ **}. \\
+Moving one outer element & Skips an entire row. & Skips one pointer slot. \\
+Row lengths & Uniform. & Can differ. \\
+\end{longtable}
+
+Both permit \texttt{{[}r{]}{[}c{]}} syntax, but their types and memory layouts differ. Casting a fixed 2D array to \texttt{int\ **} does not create row pointers.
+
+\subsubheading{6.5.4 Allocating a struct}
+\label{allocating-a-struct}
+\hypertarget{allocating-a-struct}{}
+
+\begin{lstlisting}[style=cscode]
+typedef struct {
+    int x, y;
+} Position;
+
+Position *get_pos(void) {
+    Position *pos = malloc(sizeof *pos);
+    if (pos == nullptr) {
+        return nullptr;
+    }
+    pos->x = 5;
+    pos->y = 6;
+    return pos;
+}
+\end{lstlisting}
+
+The caller checks the result, accesses members using \texttt{-\textgreater{}}, and eventually calls \texttt{free} on the returned allocation. If a struct owns additional allocations, those require their own cleanup.
+
+\subheading{6.6 Ownership and borrowing}
+\label{ownership-and-borrowing}
+\hypertarget{ownership-and-borrowing}{}
+
+Ownership is a \textbf{programming convention}, not something C's pointer types enforce.
+
+\begin{itemize}
+\tightlist
+\item
+  An \textbf{owner} is responsible for releasing an allocation or transferring that responsibility.
+\item
+  A \textbf{borrower} temporarily accesses an object without taking responsibility for freeing it.
+\item
+  Copying a pointer creates another reference to the same object; it does not create another allocation.
+\item
+  The \textbf{final owner} must perform the cleanup.
+\item
+  Decide who owns each allocation, including allocations nested inside structs or pointer arrays.
+\end{itemize}
+
+\subsubheading{6.6.1 Ownership through function calls}
+\label{ownership-through-function-calls}
+\hypertarget{ownership-through-function-calls}{}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.4300}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5700}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Function contract
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Caller responsibilities
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Function borrows an input pointer. & Retain ownership; free the allocation later if it is yours. \\
+Function consumes an owned input allocation. & Stop treating it as yours; the callee must release it or transfer ownership onward. \\
+Function returns a new owned allocation. & Check the result and eventually free it or transfer ownership. \\
+Function returns a borrowed pointer into an existing object. & Keep the original object alive; do not independently free the borrowed pointer. \\
+\end{longtable}
+
+Returning a pointer alone does not establish ownership. \textbf{Follow the function's documented contract}, especially when it might return an alias or reuse an input allocation.
+
+\subsubheading{6.6.2 Returning an allocation through \texttt{int\ **}}
+\label{returning-an-allocation-through-int}
+\hypertarget{returning-an-allocation-through-int}{}
+
+\begin{lstlisting}[style=cscode]
+int create_ones(int **out, size_t n) {
+    if (out == nullptr || n == 0) {
+        return -1;
+    }
+    int *arr = malloc(n * sizeof *arr);
+    if (arr == nullptr) {
+        return -1;
+    }
+    for (size_t i = 0; i < n; ++i) {
+        arr[i] = 1;
+    }
+    *out = arr; // Transfer the new allocation to the caller.
+    return 0;
+}
+\end{lstlisting}
+
+Call it with a pointer variable that is ready to receive the allocation:
+
+\begin{lstlisting}[style=cscode]
+int *arr = nullptr;
+if (create_ones(&arr, 5) == 0) {
+    // Use arr[0] through arr[4].
+    free(arr);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{\&arr} lets the function assign the caller's pointer.
+\item
+  The function returns a status normally and the allocation through \texttt{out}.
+\item
+  Do not overwrite an existing owned allocation without first handling its ownership.
+\end{itemize}
+
+\heading{L7. Recursion II}
+\label{l7.-recursion-ii}
+\hypertarget{l7.-recursion-ii}{}
+
+\subheading{7.1 Ownership across multiple functions}
+\label{ownership-across-multiple-functions}
+\hypertarget{ownership-across-multiple-functions}{}
+
+Ownership can pass through several functions before reaching the final owner.
+
+\begin{itemize}
+\tightlist
+\item
+  A row constructor allocates a row and returns ownership to a grid constructor.
+\item
+  The grid constructor returns ownership of the grid and its owned rows to its caller.
+\item
+  A printing function borrows the grid.
+\item
+  The final owner frees each row, then the row-pointer array.
+\end{itemize}
+
+\textbf{Example: a find-and-replace function's contract matters}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2400}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2200}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2400}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Design
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Input string
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Returned string
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+What the caller frees
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Borrow input and return a fresh result. & Remains owned by caller. & New allocation owned by caller. & Both input and result. \\
+Consume input and return an owned result. & Ownership passes to the function. & May reuse or replace the original allocation. & Result, according to the contract; do not separately free the consumed input. \\
+\end{longtable}
+
+The Lecture 7 example uses the second design. An exam question may specify a different one: check whether inputs may be modified or freed, and whether the result must be independent.
+
+\subheading{7.2 Recursive data structures}
+\label{recursive-data-structures}
+\hypertarget{recursive-data-structures}{}
+
+A recursive data structure contains links to smaller instances of the same kind of structure. Recursive functions can follow that structure directly.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Structure
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Base case
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Recursive case
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Linked list & Empty list. & One item followed by another list. \\
+Tree & Empty tree. & One item with a collection of child trees. \\
+\end{longtable}
+
+The examples below assume finite, acyclic structures. Cleanup examples assume separately allocated, owned nodes.
+
+\subheading{7.3 Linked lists}
+\label{linked-lists}
+\hypertarget{linked-lists}{}
+
+\subsubheading{7.3.1 Definition}
+\label{definition}
+\hypertarget{definition}{}
+
+\begin{lstlisting}[style=cscode]
+typedef struct LinkedList {
+    int item;
+    struct LinkedList *tail;
+} LinkedList;
+
+LinkedList *list = nullptr; // Empty list.
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Each node stores an item and a pointer to the rest of the list.
+\item
+  \texttt{tail\ ==\ nullptr} means that node is the last one.
+\item
+  \texttt{list\ ==\ nullptr} means the entire list is empty.
+\item
+  A declaration such as \texttt{LinkedList\ node;} creates a node object; it does not represent an empty list.
+\end{itemize}
+
+\textbf{Why a pointer member?}
+
+\begin{lstlisting}[style=cscode]
+// Invalid: the type would need to contain another complete instance of itself.
+// struct Bad { int item; struct Bad tail; };
+\end{lstlisting}
+
+A pointer has a finite size even when the pointed-to struct is not yet fully defined.
+
+\subsubheading{7.3.2 Print and sum}
+\label{print-and-sum}
+\hypertarget{print-and-sum}{}
+
+\begin{lstlisting}[style=cscode]
+void print_list(LinkedList const *list) {
+    if (list == nullptr) {
+        return;
+    }
+    printf("%d ", list->item);
+    print_list(list->tail);
+}
+
+int sum_list(LinkedList const *list) {
+    if (list == nullptr) {
+        return 0;
+    }
+    return list->item + sum_list(list->tail);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Printing handles the current item, then delegates the tail.
+\item
+  Summing adds the current item to the tail's sum; assume the result fits in \texttt{int}.
+\item
+  Moving the print after the recursive call prints the values in reverse order without changing the links.
+\end{itemize}
+
+\subsubheading{7.3.3 Freeing a list}
+\label{freeing-a-list}
+\hypertarget{freeing-a-list}{}
+
+\begin{lstlisting}[style=cscode]
+void free_list(LinkedList *list) {
+    if (list == nullptr) {
+        return;
+    }
+    free_list(list->tail);
+    free(list);
+}
+\end{lstlisting}
+
+Free the tail before freeing the node that stores its address. After calling this function, the caller's old head pointer must not be used; set it to \texttt{nullptr} if retaining that variable.
+
+An iterative cleanup can avoid deep recursion by saving \texttt{next\ =\ node-\textgreater{}tail} \textbf{before} freeing \texttt{node}, then continuing from \texttt{next}.
+
+\subsubheading{7.3.4 Reversing a list}
+\label{reversing-a-list}
+\hypertarget{reversing-a-list}{}
+
+\begin{lstlisting}[style=cscode]
+LinkedList *reverse_list(LinkedList *list) {
+    if (list == nullptr || list->tail == nullptr) {
+        return list;
+    }
+
+    LinkedList *rest = reverse_list(list->tail);
+    list->tail->tail = list;
+    list->tail = nullptr;
+    return rest;
+}
+\end{lstlisting}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  An empty list or a one-node list is already reversed.
+\item
+  Recursively reverse the tail.
+\item
+  The old second node is now the end of that reversed tail; link it to the old first node.
+\item
+  Set the old first node's \texttt{tail} to \texttt{nullptr}, making it the new last node.
+\item
+  Return the head of the reversed tail.
+\end{enumerate}
+
+Call using \texttt{list\ =\ reverse\_list(list);} because the head changes. This reverses links without allocating or freeing nodes. Omitting \texttt{list-\textgreater{}tail\ =\ nullptr} creates a cycle for a list with multiple nodes.
+
+\subheading{7.4 Trees}
+\label{trees}
+\hypertarget{trees}{}
+
+\subsubheading{7.4.1 A tree with a linked list of children}
+\label{a-tree-with-a-linked-list-of-children}
+\hypertarget{a-tree-with-a-linked-list-of-children}{}
+
+Use a separate linked-list type to store child-tree pointers:
+
+\begin{lstlisting}[style=cscode]
+typedef struct ChildLink {
+    struct Tree *tree;
+    struct ChildLink *tail;
+} ChildLink;
+
+typedef struct Tree {
+    int item;
+    ChildLink *sub_trees;
+} Tree;
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  A \texttt{Tree} stores its item and a pointer to its list of children.
+\item
+  Each \texttt{ChildLink} stores a child-tree pointer and the next child-link pointer.
+\item
+  \texttt{tree\ ==\ nullptr}: empty tree.
+\item
+  \texttt{tree-\textgreater{}sub\_trees\ ==\ nullptr}: a leaf with no children.
+\item
+  Child links and tree nodes are different objects; both may require freeing.
+\end{itemize}
+
+\subsubheading{7.4.2 Traversing and counting}
+\label{traversing-and-counting}
+\hypertarget{traversing-and-counting}{}
+
+\begin{lstlisting}[style=cscode]
+void print_tree(Tree const *tree) {
+    if (tree == nullptr) {
+        return;
+    }
+    printf("%d ", tree->item);
+    for (ChildLink const *p = tree->sub_trees;
+         p != nullptr; p = p->tail) {
+        print_tree(p->tree);
+    }
+}
+
+size_t count_nodes(Tree const *tree) {
+    if (tree == nullptr) {
+        return 0;
+    }
+    size_t count = 1;
+    for (ChildLink const *p = tree->sub_trees;
+         p != nullptr; p = p->tail) {
+        count += count_nodes(p->tree);
+    }
+    return count;
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Count a nonempty tree as \textbf{one current node plus the counts of all child trees}.
+\item
+  \texttt{count\_nodes} includes the root. Adjust this if the question asks only for descendants.
+\item
+  Printing before visiting children is preorder; printing after them is postorder.
+\item
+  For children stored in an array, loop over that array instead; the recursive decomposition is the same.
+\end{itemize}
+
+\subsubheading{7.4.3 Freeing an owned tree}
+\label{freeing-an-owned-tree}
+\hypertarget{freeing-an-owned-tree}{}
+
+\begin{lstlisting}[style=cscode]
+void free_tree(Tree *tree) {
+    if (tree == nullptr) {
+        return;
+    }
+
+    ChildLink *p = tree->sub_trees;
+    while (p != nullptr) {
+        ChildLink *next = p->tail;
+        free_tree(p->tree);
+        free(p);
+        p = next;
+    }
+    free(tree);
+}
+\end{lstlisting}
+
+For this representation, free each child subtree, its child-link node, and finally the parent tree node. Save the next link before freeing the current one.
+
+\subheading{7.5 Planning recursive functions}
+\label{planning-recursive-functions}
+\hypertarget{planning-recursive-functions}{}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Define exactly what the function returns or changes for one input structure.
+\item
+  Handle the empty or smallest structure before dereferencing pointers.
+\item
+  Identify the smaller recursive input: a tail or each child subtree.
+\item
+  Assume the recursive call fulfills its contract; combine that result with the current node.
+\item
+  For mutation and cleanup, decide which objects must still exist after each call.
+\end{enumerate}
+
+Deep lists or trees can exhaust the call stack. For a tree, recursion depth follows its height; a long chain can be as deep as its number of nodes.
+
+\heading{L8. Problem solving techniques: recursive backtracking and loop invariants}
+\label{l8.-problem-solving-techniques-recursive-backtracking-and-loop-invariants}
+\hypertarget{l8.-problem-solving-techniques-recursive-backtracking-and-loop-invariants}{}
+
+\subheading{8.1 Recursive backtracking}
+\label{recursive-backtracking}
+\hypertarget{recursive-backtracking}{}
+
+Backtracking explores possible solutions by making a choice, recursively solving the remaining problem, and undoing that choice when another branch must be tried.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Identify the current partial solution and the next undecided part.
+\item
+  Try a candidate choice.
+\item
+  Recursively solve the smaller remaining problem.
+\item
+  If the branch fails, restore the state before trying another choice.
+\item
+  At a complete candidate, check whether it satisfies the problem's rules.
+\end{enumerate}
+
+\textbf{The recursive call's contract matters:} does it find one solution, print all solutions, count them, or return the best one?
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Goal
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+On finding a solution
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+On returning to the caller
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Find one solution in a shared array/grid. & Return success immediately. & Retain the successful choices. \\
+Print or count all solutions. & Output the candidate or contribute to the count. & Restore state and continue exploring. \\
+Find a best solution. & Compare against the best result found so far. & Preserve a copy of the best result before restoring shared state. \\
+\end{longtable}
+
+Local scalar variables have separate copies in different calls. Mutations through pointers or array parameters affect shared storage, so they may need explicit undoing.
+
+\subheading{8.2 Example: generating permutations}
+\label{example-generating-permutations}
+\hypertarget{example-generating-permutations}{}
+
+Task: print all arrangements of the integers \texttt{1} through \texttt{n}, using each exactly once.
+
+For \texttt{n\ =\ 3}, the outputs are \texttt{123}, \texttt{132}, \texttt{213}, \texttt{231}, \texttt{312}, and \texttt{321}.
+
+\subsubheading{8.2.1 The slide approach: generate, then verify}
+\label{the-slide-approach-generate-then-verify}
+\hypertarget{the-slide-approach-generate-then-verify}{}
+
+\begin{itemize}
+\tightlist
+\item
+  State: an array and the index of the next unfilled position.
+\item
+  At each position, try every value from \texttt{1} through \texttt{n}.
+\item
+  Base case: all positions are filled.
+\item
+  Print the candidate only if every value is distinct.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+bool all_distinct(int const arr[], size_t n) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = i + 1; j < n; ++j) {
+            if (arr[i] == arr[j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void permutations(int arr[], size_t n, size_t idx) {
+    if (idx == n) {
+        if (all_distinct(arr, n)) {
+            for (size_t i = 0; i < n; ++i) {
+                printf("%d%c", arr[i], i + 1 == n ? '\n' : ' ');
+            }
+        }
+        return;
+    }
+
+    for (size_t value = 1; value <= n; ++value) {
+        arr[idx] = (int)value;
+        permutations(arr, n, idx + 1);
+    }
+}
+\end{lstlisting}
+
+Call \texttt{permutations(arr,\ n,\ 0)} with an array of at least \texttt{n} integers, and a positive \texttt{n} small enough to fit in \texttt{int}.
+
+\begin{itemize}
+\tightlist
+\item
+  The prefix \texttt{arr{[}0..idx)} represents the current partial solution.
+\item
+  In this implementation, no explicit reset is needed: every recursive branch overwrites each remaining slot before reading the complete candidate.
+\item
+  It generates \texttt{n\^{}n} full candidates, of which \texttt{n!} are permutations.
+\item
+  \textbf{Pruning:} reject a value already present in the prefix before recursing. This avoids exploring branches that cannot become valid permutations.
+\end{itemize}
+
+\subheading{8.3 Example: 4-by-4 Sudoku}
+\label{example-4-by-4-sudoku}
+\hypertarget{example-4-by-4-sudoku}{}
+
+Each row, column, and 2-by-2 box must contain \texttt{1}, \texttt{2}, \texttt{3}, and \texttt{4} once each. Use \texttt{0} to represent a blank.
+
+\subsubheading{8.3.1 Testing a possible placement}
+\label{testing-a-possible-placement}
+\hypertarget{testing-a-possible-placement}{}
+
+The following helper assumes \texttt{grid{[}r{]}{[}c{]}} is currently blank:
+
+\begin{lstlisting}[style=cscode]
+bool can_place(int grid[4][4], size_t r, size_t c, int value) {
+    for (size_t i = 0; i < 4; ++i) {
+        if (grid[r][i] == value || grid[i][c] == value) {
+            return false;
+        }
+    }
+
+    size_t box_r = (r / 2) * 2;
+    size_t box_c = (c / 2) * 2;
+    for (size_t i = box_r; i < box_r + 2; ++i) {
+        for (size_t j = box_c; j < box_c + 2; ++j) {
+            if (grid[i][j] == value) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+\end{lstlisting}
+
+\subsubheading{8.3.2 Solving with backtracking}
+\label{solving-with-backtracking}
+\hypertarget{solving-with-backtracking}{}
+
+\begin{lstlisting}[style=cscode]
+bool solve_sudoku(int grid[4][4]) {
+    for (size_t r = 0; r < 4; ++r) {
+        for (size_t c = 0; c < 4; ++c) {
+            if (grid[r][c] != 0) {
+                continue;
+            }
+
+            for (int value = 1; value <= 4; ++value) {
+                if (!can_place(grid, r, c, value)) {
+                    continue;
+                }
+                grid[r][c] = value;
+                if (solve_sudoku(grid)) {
+                    return true; // Retain the completed solution.
+                }
+                grid[r][c] = 0; // Undo this failed choice.
+            }
+            return false; // No value works in the first blank found.
+        }
+    }
+    return true; // No blanks remain.
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  This version assumes the original clues are in \texttt{1..4} and do not conflict. Validate them separately if the question does not promise this.
+\item
+  Each call is responsible for the first blank it finds.
+\item
+  Each recursive call handles the remaining blanks.
+\item
+  Every unsuccessful branch restores the blank it filled.
+\item
+  A successful branch returns without unsetting its choices, preserving the solution.
+\item
+  The slides also motivate verifying a fully filled candidate. This version prunes invalid placements earlier, so a complete grid is valid under the stated input assumption.
+\end{itemize}
+
+\subheading{8.4 Reasoning about loops using invariants}
+\label{reasoning-about-loops-using-invariants}
+\hypertarget{reasoning-about-loops-using-invariants}{}
+
+A \textbf{loop invariant} is a property that holds at a specified recurring point, usually the start of every iteration.
+
+An index can represent a \textbf{boundary between processed and unprocessed work}.
+
+Use half-open ranges:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{arr{[}0..idx)} means indexes \texttt{0} through \texttt{idx\ -\ 1}.
+\item
+  \texttt{arr{[}idx..n)} is the remaining suffix.
+\item
+  \texttt{idx\ ==\ 0}: the processed prefix is empty.
+\item
+  \texttt{idx\ ==\ n}: the entire array has been processed.
+\end{itemize}
+
+\subsubheading{8.4.1 Initialization, preservation, and termination}
+\label{initialization-preservation-and-termination}
+\hypertarget{initialization-preservation-and-termination}{}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.2200}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7800}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Stage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+What to establish
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Initialization & The invariant is true before the first iteration. \\
+Preservation & Assuming it is true at an iteration's start, the body and update make it true at the next start. \\
+Termination & The invariant together with the stopping condition implies the required result. \\
+\end{longtable}
+
+Also identify \textbf{progress}: a nonnegative quantity such as \texttt{n\ -\ idx} or \texttt{end\ -\ begin} decreases, explaining why the loop eventually stops.
+
+\subsubheading{8.4.2 Bounds must be checked before array access}
+\label{bounds-must-be-checked-before-array-access}
+\hypertarget{bounds-must-be-checked-before-array-access}{}
+
+\begin{lstlisting}[style=cscode]
+size_t first_positive(int const arr[], size_t n) {
+    size_t idx = 0;
+    while (idx < n && arr[idx] <= 0) {
+        ++idx;
+    }
+    return idx; // n means no positive element was found.
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  At the loop's start, all elements in \texttt{arr{[}0..idx)} are nonpositive.
+\item
+  \texttt{idx\ \textless{}\ n} is checked before \texttt{arr{[}idx{]}} because \texttt{\&\&} evaluates left to right and short-circuits.
+\item
+  Reversing those conditions can access out of bounds when the array is empty or has no positive element.
+\end{itemize}
+
+\subheading{8.5 Linear search and summation}
+\label{linear-search-and-summation}
+\hypertarget{linear-search-and-summation}{}
+
+\subsubheading{8.5.1 Linear search}
+\label{linear-search}
+\hypertarget{linear-search}{}
+
+\begin{lstlisting}[style=cscode]
+size_t find_value(int const arr[], size_t n, int value) {
+    for (size_t idx = 0; idx < n; ++idx) {
+        if (arr[idx] == value) {
+            return idx;
+        }
+    }
+    return n;
+}
+\end{lstlisting}
+
+Invariant at the start of an iteration: \textbf{no element in \texttt{arr{[}0..idx)} equals \texttt{value}}.
+
+\begin{itemize}
+\tightlist
+\item
+  Initially, that range is empty.
+\item
+  A nonmatching element can be added to the checked prefix.
+\item
+  If the loop finishes, the whole array has been checked.
+\item
+  The sentinel \texttt{n} is not a valid element index; check it before indexing with the result.
+\end{itemize}
+
+\subsubheading{8.5.2 Summation}
+\label{summation}
+\hypertarget{summation}{}
+
+\begin{lstlisting}[style=cscode]
+int sum_array(int const arr[], size_t n) {
+    int total = 0;
+    for (size_t idx = 0; idx < n; ++idx) {
+        total += arr[idx];
+    }
+    return total;
+}
+\end{lstlisting}
+
+Invariant: \textbf{\texttt{total} equals the sum of \texttt{arr{[}0..idx)}}, assuming the sums fit in \texttt{int}.
+
+\begin{itemize}
+\tightlist
+\item
+  Initialization: the empty prefix has sum zero.
+\item
+  Preservation: adding \texttt{arr{[}idx{]}} extends the summed prefix by one element.
+\item
+  Termination: \texttt{idx\ ==\ n}, so the prefix is the entire array.
+\end{itemize}
+
+\subheading{8.6 Binary search}
+\label{binary-search}
+\hypertarget{binary-search}{}
+
+Binary search uses sorted order to repeatedly discard a region that cannot contain the target.
+
+The following follows the slides' boundary strategy, with an extra guard for an empty array. The array must be sorted in ascending, nondecreasing order.
+
+\begin{lstlisting}[style=cscode]
+bool binary_exists(int const arr[], size_t length, int value) {
+    if (length == 0 || value < arr[0]) {
+        return false;
+    }
+
+    size_t begin = 0;
+    size_t end = length;
+    while (end - begin > 1) {
+        size_t mid = begin + (end - begin) / 2;
+        if (arr[mid] <= value) {
+            begin = mid;
+        } else {
+            end = mid;
+        }
+    }
+    return arr[begin] == value;
+}
+\end{lstlisting}
+
+\subsubheading{8.6.1 Boundary meanings}
+\label{boundary-meanings}
+\hypertarget{boundary-meanings}{}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{begin} is a valid index with \texttt{arr{[}begin{]}\ \textless{}=\ value}.
+\item
+  Either \texttt{end\ ==\ length}, or \texttt{arr{[}end{]}\ \textgreater{}\ value}.
+\item
+  \texttt{0\ \textless{}=\ begin\ \textless{}\ end\ \textless{}=\ length}; possible matches remain in \texttt{{[}begin,\ end)}.
+\item
+  The conceptual upper boundary at \texttt{length} is not an element: \textbf{never read \texttt{arr{[}length{]}}}.
+\end{itemize}
+
+\subsubheading{8.6.2 Why it works}
+\label{why-it-works}
+\hypertarget{why-it-works}{}
+
+\begin{itemize}
+\tightlist
+\item
+  The initial guard establishes \texttt{arr{[}begin{]}\ \textless{}=\ value}.
+\item
+  While the interval has at least two positions, \texttt{begin\ \textless{}\ mid\ \textless{}\ end}.
+\item
+  If \texttt{arr{[}mid{]}\ \textless{}=\ value}, move \texttt{begin} to \texttt{mid}.
+\item
+  Otherwise, move \texttt{end} to \texttt{mid}.
+\item
+  Each update preserves the boundary properties and reduces \texttt{end\ -\ begin}.
+\item
+  When one candidate index remains, compare it to \texttt{value}.
+\item
+  Computing \texttt{mid} as \texttt{begin\ +\ (end\ -\ begin)\ /\ 2} avoids overflowing \texttt{begin\ +\ end}.
+\end{itemize}
+
+\subheading{8.7 Partitioning an array}
+\label{partitioning-an-array}
+\hypertarget{partitioning-an-array}{}
+
+Task: rearrange the elements so that all values \texttt{\textless{}=\ pivot} precede all values \texttt{\textgreater{}\ pivot}.
+
+Example: \texttt{\{9,\ 5,\ 3,\ 10,\ 0\}} with pivot \texttt{8} may become \texttt{\{0,\ 5,\ 3,\ 10,\ 9\}}. Neither region needs to be internally sorted.
+
+\subsubheading{8.7.1 Invariant and implementation}
+\label{invariant-and-implementation}
+\hypertarget{invariant-and-implementation}{}
+
+This version uses an \textbf{exclusive right boundary}, making empty arrays straightforward:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.3000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Region
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Property
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{{[}0,\ left)} & Already known to be \texttt{\textless{}=\ pivot}. \\
+\texttt{{[}left,\ right)} & Not yet classified. \\
+\texttt{{[}right,\ n)} & Already known to be \texttt{\textgreater{}\ pivot}. \\
+\end{longtable}
+
+\begin{lstlisting}[style=cscode]
+size_t partition(int arr[], size_t n, int pivot) {
+    size_t left = 0;
+    size_t right = n;
+
+    while (left < right) {
+        if (arr[left] <= pivot) {
+            ++left;
+        } else if (arr[right - 1] > pivot) {
+            --right;
+        } else {
+            int temp = arr[left];
+            arr[left] = arr[right - 1];
+            arr[right - 1] = temp;
+            ++left;
+            --right;
+        }
+    }
+    return left; // Boundary between the two completed regions.
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Each iteration classifies at least one element, shrinking the unknown region.
+\item
+  At termination, \texttt{left\ ==\ right}, so no unclassified elements remain.
+\item
+  The return value \texttt{k} gives \texttt{{[}0,\ k)} with values \texttt{\textless{}=\ pivot}, and \texttt{{[}k,\ n)} with values \texttt{\textgreater{}\ pivot}.
+\item
+  It handles an empty array, one element, all values on one side, and repeated values.
+\end{itemize}
+
+\subsubheading{8.7.2 Mistakes illustrated in the slides}
+\label{mistakes-illustrated-in-the-slides}
+\hypertarget{mistakes-illustrated-in-the-slides}{}
+
+\begin{itemize}
+\tightlist
+\item
+  Initializing an unsigned right index as \texttt{n\ -\ 1} when \texttt{n\ ==\ 0} causes wraparound.
+\item
+  An inner loop such as \texttt{while\ (arr{[}idx{]}\ \textless{}=\ pivot)} can run beyond the array unless it also checks bounds.
+\item
+  Pointer/index movements must preserve the invariant and make progress.
+\item
+  With an inclusive right index, stopping at equal indexes leaves one element whose classification must still be reasoned about.
+\item
+  \textbf{Unsigned subtraction does not become negative:} decrementing \texttt{size\_t} zero wraps to a large value.
+\end{itemize}
+
+\heading{L9. Static lifetimes, file scope, and input}
+\label{l9.-static-lifetimes-file-scope-and-input}
+\hypertarget{l9.-static-lifetimes-file-scope-and-input}{}
+
+\subheading{9.1 Scope and lifetime are different}
+\label{scope-and-lifetime-are-different}
+\hypertarget{scope-and-lifetime-are-different}{}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Scope}: where an identifier can be used in the source code.
+\item
+  \textbf{Lifetime}: when the object exists during execution.
+\item
+  A name becoming inaccessible does not necessarily mean the pointed-to allocation is deallocated.
+\end{itemize}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3800}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2800}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3400}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Example
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Identifier scope
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Object lifetime
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Ordinary local \texttt{int\ x;} & Block & Automatic; ends when its block exits. \\
+Local \texttt{int\ *p;} & Block & The pointer variable itself has automatic lifetime. \\
+Allocation referenced by \texttt{p\ =\ malloc(...)} & The allocation has no identifier of its own. & Dynamic; until deallocated. \\
+File-scope \texttt{int\ count;} & From its declaration to the end of the file. & Static; entire execution. \\
+Local \texttt{static\ int\ count;} & Block & Static; entire execution. \\
+\end{longtable}
+
+\begin{lstlisting}[style=cscode]
+void leak(void) {
+    int *p = malloc(5 * sizeof *p);
+} // p disappears; the allocation remains and has been leaked.
+\end{lstlisting}
+
+The same distinction applies to a file-scope pointer: its own static lifetime does not automatically free its dynamic allocation.
+
+\subheading{9.2 File-scope variables: shared state}
+\label{file-scope-variables-shared-state}
+\hypertarget{file-scope-variables-shared-state}{}
+
+A variable declared outside all functions has file scope and static storage duration.
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int count; // Initialized to zero.
+
+void increment(void) {
+    ++count;
+}
+
+int main(void) {
+    increment();
+    increment();
+    printf("%d\n", count); // 2
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  The variable exists for the entire program execution.
+\item
+  Static-duration objects without an explicit initializer are initialized appropriately: arithmetic values to zero, pointers to null, and aggregate members recursively.
+\item
+  Functions with access to the declaration can share and modify the variable.
+\item
+  A function may therefore change state that is not mentioned in its parameters.
+\end{itemize}
+
+\subsubheading{9.2.1 Uses and tradeoffs}
+\label{uses-and-tradeoffs}
+\hypertarget{uses-and-tradeoffs}{}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Shared state:} e.g., several functions controlling the same robot motors.
+\item
+  \textbf{Additional output:} e.g., an error indicator alongside a function's normal return value.
+\item
+  Shared mutable state makes behavior harder to trace; prefer parameters and explicit output values when practical.
+\end{itemize}
+
+\begin{lstlisting}[style=cscode]
+int error = 0; // 0 means success; 1 means division by zero.
+
+double safe_divide(double a, double b) {
+    if (b == 0.0) {
+        error = 1;
+        return 0.0;
+    }
+    error = 0; // Clear an error from a previous call.
+    return a / b;
+}
+\end{lstlisting}
+
+The caller checks \texttt{error} after calling. An alternative is an output parameter, such as \texttt{int\ *err}, which makes the extra output explicit.
+
+\subsubheading{9.2.2 Library error state: \texttt{errno}}
+\label{library-error-state-errno}
+\hypertarget{library-error-state-errno}{}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{\textless{}errno.h\textgreater{}} provides \texttt{errno}, a macro used to access library error state.
+\item
+  Some library functions document setting it when an error occurs.
+\item
+  Reset it to zero before a call when that function's error-checking procedure requires it.
+\item
+  Successful calls do not generally promise to reset a previous error.
+\item
+  \texttt{perror("message")}, from \texttt{\textless{}stdio.h\textgreater{}}, writes a message describing the current \texttt{errno} to standard error.
+\item
+  Follow the particular function's return-value and error contract; \texttt{errno} alone is not a universal success/failure indicator.
+\end{itemize}
+
+\subheading{9.3 Local \texttt{static} variables}
+\label{local-static-variables}
+\hypertarget{local-static-variables}{}
+
+A local \texttt{static} variable has \textbf{block scope and static lifetime}: its name is local, but its stored value survives between calls.
+
+\begin{lstlisting}[style=cscode]
+void log_msg(char const *msg) {
+    static int count = 0;
+    ++count;
+    printf("%d: %s\n", count, msg);
+}
+\end{lstlisting}
+
+Calling \texttt{log\_msg("start")}, then \texttt{log\_msg("done")}, prints:
+
+\begin{lstlisting}[style=plaincode]
+1: start
+2: done
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  The initializer does not run afresh on each function call.
+\item
+  Without an explicit initializer, a static integer starts at zero.
+\item
+  An ordinary local \texttt{int\ count\ =\ 0;} would be reinitialized on every call.
+\item
+  Recursive calls also share the same local static object; they do not get separate copies of it.
+\item
+  Persistent state can make later calls depend on earlier calls.
+\end{itemize}
+
+The slides focus on \texttt{static} for block-scope variables. Its uses with file-scope objects and functions concern linkage and are outside this lecture's examinable scope.
+
+\subheading{9.4 \texttt{strtok}: persistent state in a library function}
+\label{strtok-persistent-state-in-a-library-function}
+\hypertarget{strtok-persistent-state-in-a-library-function}{}
+
+\texttt{strtok}, from \texttt{\textless{}string.h\textgreater{}}, splits a \textbf{modifiable string} into tokens separated by delimiter characters.
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+    char text[] = "a,bc,d";
+    char *part = strtok(text, ",");
+
+    while (part != nullptr) {
+        printf("%s\n", part);
+        part = strtok(nullptr, ",");
+    }
+}
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=plaincode]
+a
+bc
+d
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  First call: pass the input array.
+\item
+  Later calls: pass \texttt{nullptr} to continue the same tokenization.
+\item
+  It replaces separator characters with \texttt{\textquotesingle{}\textbackslash{}0\textquotesingle{}}, making each returned token a string.
+\item
+  It remembers where to continue between calls; a static pointer can implement that state.
+\item
+  It returns \texttt{nullptr} when no tokens remain.
+\item
+  The delimiter argument specifies a \textbf{set of separator characters}, not a substring to match.
+\item
+  Consecutive separators are skipped; they do not produce empty tokens.
+\item
+  Returned pointers refer into the original buffer; they are borrowed and must not be individually freed.
+\item
+  The input buffer must remain alive. Do not pass a string literal for modification.
+\item
+  Starting tokenization on another string changes the remembered state, which complicates nested tokenization.
+\end{itemize}
+
+\subheading{9.5 A general input-processing workflow}
+\label{a-general-input-processing-workflow}
+\hypertarget{a-general-input-processing-workflow}{}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Read characters or a string from \texttt{stdin}.
+\item
+  Check the reading function's result.
+\item
+  Convert or parse the string if other types are required.
+\item
+  Validate the conversion and pass the data to the rest of the program.
+\item
+  Free any owned input buffer when finished.
+\end{enumerate}
+
+The lecture assumes ASCII input and focuses on standard input. Shell redirection can supply it from a file, e.g., \texttt{./program\ \textless{}\ input.txt}.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2300}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2700}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Function
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Main job
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Who supplies storage?
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Result to check
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{getchar()} & Read one character. & No string buffer needed. & Character value as \texttt{int}, or \texttt{EOF}. \\
+\texttt{fgets(buffer,\ count,\ stdin)} & Read into a fixed-capacity buffer. & Caller. & \texttt{buffer} on success; null pointer on failure/no characters at EOF. \\
+\texttt{getline(\&line,\ \&capacity,\ stdin)} & Read a line with a resizable buffer. & Can allocate/resize for caller. & Character count, or \texttt{-1}. \\
+\texttt{sscanf(text,\ format,\ ...)} & Parse an existing string. & Caller supplies output variables. & Number of successful assignments, or \texttt{EOF} for an initial input failure. \\
+\end{longtable}
+
+\subheading{9.6 \texttt{getchar}: one character at a time}
+\label{getchar-one-character-at-a-time}
+\hypertarget{getchar-one-character-at-a-time}{}
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+int main(void) {
+    int ch;
+    while ((ch = getchar()) != EOF) {
+        putchar(ch);
+    }
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  The return type is \texttt{int} so it can represent character values and the distinct sentinel \texttt{EOF}.
+\item
+  Store the result in an \texttt{int}; check \texttt{EOF} before converting to \texttt{char}.
+\item
+  \texttt{EOF} indicates end of input or a reading error; use the named constant rather than assuming a particular number.
+\item
+  Pressing Enter contributes a newline character, \texttt{\textquotesingle{}\textbackslash{}n\textquotesingle{}}.
+\item
+  In a typical terminal, Ctrl+D on Unix-like systems, or Ctrl+Z followed by Enter on Windows, signals end of input.
+\end{itemize}
+
+The parentheses in \texttt{(ch\ =\ getchar())\ !=\ EOF} ensure the character is assigned before the comparison.
+
+\subheading{9.7 \texttt{fgets}: reading into a caller-provided buffer}
+\label{fgets-reading-into-a-caller-provided-buffer}
+\hypertarget{fgets-reading-into-a-caller-provided-buffer}{}
+
+\begin{lstlisting}[style=cscode]
+char buffer[100];
+if (fgets(buffer, sizeof buffer, stdin) != nullptr) {
+    printf("%s", buffer);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  With a valid buffer and \texttt{count\ \textgreater{}=\ 2}, reads at most \texttt{count\ -\ 1} characters, then appends \texttt{\textquotesingle{}\textbackslash{}0\textquotesingle{}} on success.
+\item
+  Stops after reading a newline, reaching EOF, or filling that character limit.
+\item
+  A newline is included if it was read.
+\item
+  A line that is longer than the buffer is read in pieces; the remaining characters stay in the input stream.
+\item
+  EOF after some characters can still produce a successful final partial line.
+\item
+  If no characters are read before EOF, or a read error occurs, it returns a null pointer. Do not process the buffer as a successful new line then.
+\item
+  \texttt{sizeof\ buffer} gives its capacity here because \texttt{buffer} is an actual array. For an allocated pointer or function parameter, pass the capacity separately.
+\end{itemize}
+
+For a buffer of five characters, input \texttt{asd\textbackslash{}n} fits including its newline and terminator. Input \texttt{asdf\textbackslash{}n} fills the four-character allowance, leaving the newline for a later read.
+
+\subheading{9.8 \texttt{getline}: reading a dynamically sized line}
+\label{getline-reading-a-dynamically-sized-line}
+\hypertarget{getline-reading-a-dynamically-sized-line}{}
+
+\texttt{getline} is \textbf{POSIX, not ISO C}. The slides use a Unix-like environment; support and build settings depend on the platform.
+
+\begin{lstlisting}[style=cscode]
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
+int main(void) {
+    char *line = nullptr;
+    size_t capacity = 0;
+    ssize_t length;
+
+    while ((length = getline(&line, &capacity, stdin)) != -1) {
+        printf("Read %zd characters: %s", length, line);
+    }
+
+    free(line);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{\&line} has type \texttt{char\ **}: the function may assign or replace the caller's buffer pointer.
+\item
+  \texttt{\&capacity} lets it update the number of bytes allocated for that buffer.
+\item
+  The return value counts characters read, including a newline if present, but excluding \texttt{\textquotesingle{}\textbackslash{}0\textquotesingle{}}.
+\item
+  \textbf{Capacity and string length are different.} The buffer may be larger than the current line requires.
+\item
+  A blank line containing only \texttt{\textquotesingle{}\textbackslash{}n\textquotesingle{}} is a successful read of length one.
+\item
+  The buffer can be reused and resized across calls; free the final buffer once finished, including after the loop ends with an error or EOF.
+\item
+  Free \texttt{line}, not \texttt{\&line}. Token pointers returned into it are borrowed.
+\item
+  \texttt{ssize\_t} is signed so it can represent \texttt{-1}; \texttt{\%zd} prints it in this POSIX environment.
+\end{itemize}
+
+\subheading{9.9 \texttt{sscanf}: converting a string into values}
+\label{sscanf-converting-a-string-into-values}
+\hypertarget{sscanf-converting-a-string-into-values}{}
+
+\begin{lstlisting}[style=cscode]
+char const *text = "x=1234, y=5678.54344";
+int x;
+double y;
+
+int assigned = sscanf(text, "x=%d, y=%lf", &x, &y);
+if (assigned == 2) {
+    printf("x=%d, y=%f\n", x, y);
+} else {
+    fprintf(stderr, "Unexpected input format\n");
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{sscanf} reads the existing string; it does not read from \texttt{stdin}.
+\item
+  Pass addresses of output variables so the function can store converted values.
+\item
+  The format describes the expected input structure; literal characters must match, with whitespace handled according to the conversion rules.
+\item
+  Check that the number of assignments equals the number expected before using all outputs.
+\item
+  Successful conversions can occur before a later conversion fails.
+\item
+  Getting two assignments does not prove the entire string was consumed; trailing text may remain.
+\end{itemize}
+
+\subsubheading{9.9.1 Common conversion formats}
+\label{common-conversion-formats}
+\hypertarget{common-conversion-formats}{}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5200}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2200}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2600}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Desired destination
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Format for \texttt{sscanf}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Argument type
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Integer & \texttt{\%d} & \texttt{int\ *} \\
+Floating-point value stored in \texttt{float} & \texttt{\%f} & \texttt{float\ *} \\
+Floating-point value stored in \texttt{double} & \texttt{\%lf} & \texttt{double\ *} \\
+\texttt{size\_t} value & \texttt{\%zu} & \texttt{size\_t\ *} \\
+One character & \texttt{\%c} & \texttt{char\ *} \\
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  For input conversion, \texttt{\%f} and \texttt{\%lf} require different destination types.
+\item
+  This differs from \texttt{printf}, where a \texttt{float} argument is promoted to \texttt{double} and \texttt{\%f} is used for both.
+\item
+  For bounded string conversions, supply a field width that leaves room for \texttt{\textquotesingle{}\textbackslash{}0\textquotesingle{}}, e.g., \texttt{\%19s} for \texttt{char\ word{[}20{]}}.
+\item
+  The slides also mention \texttt{strtol} for converting a single integer from a string.
+\item
+  The course recommends reading a line and then converting it, rather than relying on direct \texttt{scanf} input.
+\end{itemize}
+
+\subheading{9.10 The course's problem-solving workflow}
+\label{the-courses-problem-solving-workflow}
+\hypertarget{the-courses-problem-solving-workflow}{}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Understand the specification:} inputs, required output, constraints, ownership, and promises.
+\item
+  \textbf{Design test cases:} normal cases, empty/smallest cases, boundaries, and cases that challenge assumptions.
+\item
+  \textbf{Decompose the problem:} define helper functions and contracts for smaller tasks.
+\item
+  \textbf{Implement:} choose suitable loops, recursion, arrays, pointers, structs, and storage lifetimes.
+\item
+  \textbf{Debug:} compare actual behavior with the specification and revise the reasoning or implementation.
+\end{enumerate}
+
+For recursive code, identify the base case, smaller input, and combination step. For loop code, identify the invariant, safe accesses, progress, and stopping condition. For allocated data, identify the owner and cleanup path.
+
+\clearpage
+\heading{L8: Problem solving and recursive backtracking (draft)}
+\label{l8-problem-solving-and-recursive-backtracking}
+\hypertarget{l8-problem-solving-and-recursive-backtracking}{}
+
+\textbf{Draft retained from the Markdown source.} The following supplementary example is unfinished and is not complete, compilable C code. The completed permutation example appears in \hyperref[example-generating-permutations]{Section~8.2}.
+
+Recursive data structures:
+
+\begin{lstlisting}[style=cscode]
+typedef struct LinkedList{
+struct Tree *tree;
+struct LinkedList *tail;
+} LinkedList;
+typedef struct Tree {
+int item;
+LinkedList *sub_trees;
+} Tree;
+\end{lstlisting}
+
+example: given an integer n, print all possible permutations 1,\ldots,n
+
+e.g.~n=3
+
+base case: if array is entirely filled, and check if it is a permutation.
+
+\begin{lstlisting}[style=cscode]
+#include <stdio.h>
+
+bool is_valid_solution(int *arr, int N) {
+    return false;
+}
+
+void print_soln(int *arr, int N) {
+    for (int i=0; i<N, i++)
+
+}
+
+void permute_h(int *arr, int N, int i) {
+    if (i==N) {
+        //reached the end of the array
+        // see if solution is valid
+        // if so, we print it, if not, dont
+        if (is_valid_solution(arr, N)) {
+            print_soln(arr, N);
+        }
+    }
+}
+
+void permute(int *arr, int N) {
+    permute_h(arr, N, 0);
+}
+
+int main() {
+    // assume we read this as input
+    int const N = 3;
+    // assume this malloc succeeds
+    int *arr = calloc(sizeof(int)*N); // makes it all zeroes
+
+    //print all permutations
+    permute(arr, N);
+}
+\end{lstlisting}
+
+\end{document}
